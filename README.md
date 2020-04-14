@@ -1,7 +1,7 @@
 Official repository of the LIFE+T.E.N. (Trentino Ecological Network) WebGIS
 ===================
 <div style="position:absolute,width:100%">
-<img src="https://raw.githubusercontent.com/MUSEZOOLVERT/gis/master/src/static/site/img/loghi/lifeten_muse.png" alt="Loghi" alt="Barra loghi LIFE TEN">
+<img src="https://github.com/MUSEZOOLVERT/lifeten-webgis/raw/master/django/lifeten/lifeten/static/loghi/lifeten_muse.png" alt="Loghi" alt="Barra loghi LIFE TEN">
 </div>
 
 ## Credits
