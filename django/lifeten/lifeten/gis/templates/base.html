@@ -1,0 +1,150 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>   <!-- Head begin -->
+		
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>{% block title %}LIFE+ T.E.N. Database{% endblock %}</title>
+        <link rel="stylesheet" href="{{ STATIC_URL }}CSS/base.css" type="text/css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}jquery-ui-1.10.2.custom/css/start/jquery-ui-1.10.2.custom.css" />
+
+        <link rel="shortcut icon" href="{{ STATIC_URL }}icons/favicon.ico" />
+        
+		<script src="{{ STATIC_URL }}jquery-ui-1.10.2.custom/js/jquery-1.9.1.js"></script>
+		<script src="{{ STATIC_URL }}jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.min.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}pagesize.js"></script> 
+		<script type="text/javascript" src="{{ STATIC_URL }}sessvars.js"></script>
+		
+		{% block head %}{% endblock %}
+		
+		
+
+
+    <!-- Inizio form di login semplice -->
+    <script type="text/javascript">
+	    var url='http://127.0.0.1:8000';
+	    $(function() {
+            $( "a.button" ).button();
+            $( "a.log" ).button();
+            $('#login').dialog({
+	            autoOpen: false,
+	            modal: false,
+	            resizable: false,
+	            draggable: true,
+	            width: 400
+	        });
+	    });
+	        
+	    function login(){
+	        $('#formlogin').load('/login_simple')
+	        $('#login').dialog('open');
+	    };
+
+	    var query = window.location.search;
+    </script>
+
+    </head>      
+    <body>
+        <div class="footer">     
+	    {% block footer %}
+	        <table width="100%" border="0"  align="left" bgcolor="#FFCC00">
+	            <tr>
+
+	            		<!-- Logo PAT -->		            	
+	            		<td class="logo">
+		            		<a href="http://www.lifeten.tn.it" target="_blank"><img title="MUSE - Museo delle Scienze" src="{{ STATIC_URL }}loghi/provincia_trento_logo.png" alt="Logo PAT" height="45em" border="0"></a>
+	            		<!-- Logo MUSE -->	
+	            		<td class="logo">
+		            		<a href="http://www.muse.it" target="_blank"><img title="MUSE - Museo delle Scienze" src="{{ STATIC_URL }}loghi/logo_MUSE_verde_nospace.png" alt="Logo MUSE" height="30em" border="0"></a>
+	           			</td>
+	            		<!-- Logo FEM -->
+	            		<td class="logo">
+							<a href="http://www.fmach.eu" target="_blank"><img title="Fondazione Mach" src="{{ STATIC_URL }}loghi/logo_fem_stemma.png" alt="logo FEM" height="46em" border="0"></a>
+	      				</td>
+	      			
+
+	      		    <!-- Credits -->
+	      		    <!--
+	      		    <td style="margin-left:0px; margin-right:auto; text-align: left">
+						<small>
+						Database: <a href="www.muse.it">MUSE</a> - <a href="http://www.muse.it/it/la-ricerca/Zoologia-vertebrati">Sez. Zoologia dei Vertebrati</a>
+						</br>
+						WebGIS: <a href="http://www.fmach.it">FEM</a> - <a href="http://gis.cri.fmach.it"> GIS-RS Platform	</a>
+						</small>
+					-->
+					<!--
+					<td style="margin-left:0px; width: 15%; text-align: left; white-space: nowrap">
+						<small>
+						Realizzato nell'ambito dell'<a href="http://www.lifeten.tn.it/actions/preliminary_actions/pagina1.html" title="Link - Azione A1">Azione A1</a> del progetto <a href="www.lifeten.tn.it" title="Link - LIFE+T.E.N.">LIFE+T.E.N.</a> dal <a href="www.muse.it" title="Link - MUSE, Museo delle Scienze">MUSE</a> con la collaborazione di <a href="http://www.fmach.it" title="Link - FEM, Fondazione Edmund Mach">FEM-CRI</a>	
+						</br>
+						WebGIS: <a href="mailto:luca.delucchi@fmach.it" title="Contatto - Luca Delucchi">Luca Delucchi - FEM</a>
+						</br>
+						Database: <a href="mailto:clara.tattoni@muse.it" title="Contatto - Clara Tattoni"> Clara Tattoni - MUSE </a>
+						</br> 
+						Gestione ed implementazione: <a href="mailto:aaron.iemma@muse.it" title="Contatto - Aaron Iemma">Aaron Iemma - MUSE</a>
+						</br> 
+						Coordinamento: <a href="mailto:paolo.pedrini@muse.it" title=" Contatto - Paolo Pedrini">Paolo Pedrini - MUSE</a>
+						</small>
+	    	        
+	    	        </td>
+	    	        -->
+	    	    	
+                    
+                    <!-- Login and links placeholder -->
+                    {% block link %}{% endblock %}
+		            {% if user.username == "ospite" %}
+		            	<td class="footercell" style="width: 8%">
+		             		<small> Bentornato <b style="text-transform: uppercase">{{ user.username }}</b> </small>
+		            	</td>
+		            	<td class="footercell"> 	
+		            		<a href="javascript:login()" class="button small">Autenticati</a>
+		            	</td>
+		            {% elif user.username %}
+		            	<td class="footercell" style="width: 8%">
+		             		<small> Bentornato <b style="text-transform: uppercase">{{ user.username }}</b> </small>
+		            	</td>
+		            	<td class="footercell"> 	
+		            		<a href="/logout" class="button small">Esci</a>
+		            	</td>
+		            	<td class="footercell" style="text-align: center;">
+		            		<a href="http://form.jotformeu.com/form/41241636400341" class='button small' target="_blank">Trasmissione</a>
+		            	</td>	            		            		
+		            {% else %}	            
+		            	<td class="footercell">
+		             		<a href="javascript:login()" class="button small">Autenticati</a>
+		            	</td>		            
+		            {% endif %}
+		            	<td class="footercell">
+		            		<a href="{{ STATIC_URL }}docs/webgis_manual.pdf" target="_blank" class='button small'>Manuale</a>
+		            	</td>
+		            	<td class="footercell">
+                    		<a href="/credits" class='button small'>Fonti</a>
+		            	</td>	
+	            </tr>
+	        </table>
+	    {% endblock %}
+        </div>
+
+
+	    <div id="content">
+	        {% block content %}{% endblock %}
+	        <div class=push></div>
+	    </div>
+	    <div id="login">
+	        <div id="formlogin"></div>
+	    </div>
+
+
+    </body>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-59277737-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</html>

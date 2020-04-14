@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Lifeten Database: informazioni sul portale {% endblock %}
+
+{% block content %}
+<div id="header">Lifeten Database: supporto online</div>
+<h3>Informazioni tecniche</h3>
+<div id="descri">Il sito è ottimizzato per la visualizzazione con i browser <a href="http://www.mozilla.org/it/firefox/new/" target="_blank">Mozilla Firefox</a> e <a href="https://www.google.com/intl/it/chrome/browser/" target="_blank">Google Chrome</a>.<br /><br />
+Per ottenere informazioni più precise su quali siano le fonti e i responsabili dei dati potete utilizzare la pagina <a href="/viewdata">Visualizza dati</a> e interrogare per l'area protetta o il comune richiesti.<br /><br />
+Per lo scaricamente dal webgis il formato <b>KML</b> è adatto per il software Google Earth, ma per qualsiasi altro utilizzo consigliamo di scaricare altri formati.<br /><br />
+Per effettuare uno <b>zoom tramite un rettangolo</b> cliccare il tasto <b>Shift e il tasto sinistro del mouse</b>; dovrete otterrete un rettangolo rosso come nell'immagine di seguito.<br /><br />
+<p align="center"><img src="{{ STATIC_URL }}zoom_box.png" height="250" width="520"></p>
+I software utilizzati sono:
+<ul>
+  <li><a href="http://www.postgresql.org" target="_blank">PostgreSQL</a> e <a href="http://www.postgis.org" target="_blank">PostGIS</a> per l'archiviazione dei dati</li>
+  <li><a href="https://www.djangoproject.com/" target="_blank">Django</a></li>
+  <li><a href="http://jquery.com/" target="_blank">JQuery</a> e <a href="http://jqueryui.com/" target="_blank">JQuery UI</a></li>
+  <li><a href="http://openlayers.org/" target="_blank">OpenLayers</a></li>
+</ul>
+</div>
+
+<h3>I dati</h3>
+<div id="descri">Se avete bisogno di dati e non potete accedervi, vi consigliamo di contattare i responsabili dei dati per prendere un accordo direttamente con i gestori di quel determinato dato.
+</div>
+
+{% endblock %}
+{% block link %}
+    {% if user.is_authenticated %}
+      <td class='right'><a href="/lifeten" class='button small'>Homepage</a></td><td class='right'><a href="/viewdata" class='button small'>Dati</a></td><td class='right'><a href="/viewspecie" class='button small'>Specie</a></td><td class='right'><a href="/webgis" class='button small'>WebGIS</a></td>
+    {% else %}
+      <td class='right'><a href="/lifeten" class='button small'>Homepage</a></td>
+    {% endif %}
+{% endblock %}

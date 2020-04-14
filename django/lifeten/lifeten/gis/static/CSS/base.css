@@ -1,0 +1,42 @@
+
+/* Footer elements */
+.footer {
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 1em;
+	width: 99%;
+	position: fixed;
+	z-index	:10000; 
+	clear: both;
+	overflow: auto;
+	}
+.footer table {
+	/*Red, Green, Blue, Alpha code */
+ 	background: rgb(255, 204, 9); /* Fall-back for browsers that don't support rgba */
+	background: rgba(255, 204, 0, .9); 
+	}	
+.logo {
+	width: 5%;
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 1em;
+	}	
+.footercell {
+	overflow: hidden;
+	text-align: right; 
+	width: 5%;
+	white-space: nowrap;
+	}
+.linkblock {
+	margin: auto;
+	}	
+
+/* Links style */
+a {
+	color: #161696;
+	text-decoration: none;
+	}
+a:hover {
+	color:	#FFCC00;
+	}

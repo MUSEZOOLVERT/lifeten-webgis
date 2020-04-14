@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Lifeten Database: visualizza le specie {% endblock %}
+
+{% block head %}
+  <script type="text/javascript" src="{{ STATIC_URL }}tablesorter/jquery.tablesorter.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}jquery.tablesorter.scroller.js"></script>  
+  <script type="text/javascript" src="{{ STATIC_URL }}functions.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}scripts/viewspecies.js"></script>
+  <link rel="stylesheet" href="{{ STATIC_URL }}tablesorter/themes/blue/style.css" />
+  <style>	
+  	img.inline {
+  		width: 1em;
+  		vertical-align:middle;
+  	}
+  </style>
+<!--   <script type="text/javascript" src="{{ STATIC_URL }}jquery-history-1.5.0-final/scripts/jquery.history.min.js"></script> -->
+{% endblock %}
+
+{% block content %}
+  <body onload="init()">
+    <div id="header">SPECIE PER AREA</div>
+    <br>
+    <hr>
+    <!-- <div id="descri">
+
+      <ul>	
+    	  <li>
+    		  Richiedere l'area protetta o il comune per cui si desidera ottenere la lista delle specie dai rispettivi menu a tendina. 
+    		  <br/>
+    		    <img src="{{ STATIC_URL }}icons/alert.png" class="inline"/> Per specie molto rilevate, la restituzione delle informazioni pu&ograve; richiedere molto tempo.
+    		  </br>
+    		    <img src="{{ STATIC_URL }}icons/alert.png" class="inline"/> La ricerca incrociata tra area protetta e comune è in corso di implementazione.
+    		  <br/>
+ 		    </li>
+        <li>
+ 			    In tutti i casi, la ricerca può essere salvata su un file CSV (<em> Comma Separated Value </em>) cliccando sul tasto <strong> Esporta dati </strong> che compare una volta caricati i risultati della ricerca.
+        </li>
+      </ul>
+	  </div> -->
+
+      <table width="28%">
+        <tr>
+          <td colspan=1>
+            <select id="area" style="font-size: 8pt;width: 60%">
+              <option value="default" selected="selected">Seleziona per area protetta</option>
+            </select>
+          </td>
+          <!--<td>
+            <select id="comune">
+              <option value="default" selected="selected">Seleziona per comune</option>
+            </select>
+          </td>
+        </tr>
+        <tr> -->
+        <td id="buttondati" colspan=1><a href="javascript:table()" class="button" id='datirequest'>Richiedi dati</a> </td>
+        <td>
+        </td>
+      </tr>
+      <tr id="selectors">
+      <td>
+      </tr>
+      </table>
+    
+    <div id="spinner"><img src="{{ STATIC_URL }}icons/spinner.gif" alt="Caricamento..." /></div>
+    <div id="datatable"></div>
+
+
+{% endblock %}
+
+{% block link %}
+<div class="linkblock">
+    <td class="footercell"><a href="/lifeten" class='button small'>Homepage</a></td>
+    <td class="footercell"><a href="/webgis" class='button small'>WebGIS</a></td>
+    <td class="footercell"><a href="/viewdata" class='button small'>Dati tabellari</a>
+</div>  
+{% endblock %}

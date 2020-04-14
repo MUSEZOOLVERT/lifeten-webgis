@@ -1,0 +1,114 @@
+/**
+ * CSS for override default HSLayers and OpenLayers styles.
+ * This files depends on version of HSLayers
+ */
+ 
+.hsControlPanel {
+    height: 30px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    left: auto;
+    text-align: right;
+    background-color: #DEECFD;
+    padding: 4px;
+    height: 24px;
+    width: auto;
+}
+
+.HSLayersControlBoxLayerSwitcher {
+    font-size:13px;
+    top:10px;
+    left:80px;
+    filter:alpha(opacity=100);
+    -moz-opacity:1;
+    opacity: 1;
+    width: auto;
+}
+
+.HSLayersControlBoxLayerSwitcher .olGroupInactive {
+    width: auto;
+    text-align:center;
+    background:#EEEEEE url(img/tab-strip-bg.gif);
+    padding: 2px;
+    margin:1px;
+    border: 1px #E0E0E0 solid;
+}
+
+.HSLayersControlBoxLayerSwitcher .olSublayerActive {
+    background:#F8F8F8 url(img/checked.gif);
+    background-position: 2px 0px;
+    background-repeat:no-repeat;
+    margin-top:0px;
+    padding:2px;
+    padding-left: 18px;
+    border: 0px #E0E0E0 solid;
+}
+
+.HSLayersControlBoxLayerSwitcher .olSublayerInactive {
+    background:#F8F8F8 url(img/unchecked.gif);
+    background-position: 2px 0px;
+    background-repeat:no-repeat;
+    margin-top:0px;
+    padding:2px;
+    padding-left: 18px;
+    border: 0px #E0E0E0 solid;
+}
+
+.HSLayersControlBoxLayerSwitcher .olGroupActive {
+    width: auto;
+    font-weight: bold;
+    text-align:center;
+    background:#EEEEEE;
+    padding: 2px;
+    margin:1px;
+    border: 1px white inset;
+}
+
+.HSLayersControlBoxLayerSwitcher .olSublayersList {
+    width: 200px;
+    /*background: #F8F8F8;*/
+}
+
+
+div.olControlOverviewMapElement {
+    background: none;
+    background: url('img/overview_background.png') no-repeat 0px 0px;
+    -moz-border-radius-topleft:0em;
+}
+
+.hsControlPanel .hsControlEraseItemInactive {
+    background-image: url("img/erase_off.png");
+}
+
+.hsControlPanel .hsControlEraseItemActive {
+    background-image: url("img/erase_on.png");
+}
+
+.olControlAttribution {
+    font-size: smaller;
+    right: 3px;
+    bottom: 3px;
+    position: absolute;
+    display: block;
+}
+
+.olFramedCloudPopupContent {
+    _padding-bottom: 15px;
+    *padding-bottom: 15px;
+}             
+
+.olPopupContent {
+    padding:0px;
+} 
+            
+.olControlNavigationHistory {
+   background-image: url("img/navigation_history2.png");
+   background-repeat: no-repeat;
+   width:  24px;
+   height: 24px;
+} 
+
+.ext-el-mask {
+    z-index: 10000;
+}

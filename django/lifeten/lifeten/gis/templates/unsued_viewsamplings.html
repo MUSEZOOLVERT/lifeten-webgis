@@ -1,0 +1,34 @@
+{% extends "view.html" %}
+
+{% block tablehead %}
+<thead>
+    <tr  id="hor-zebra">
+        <th>Specie</th>
+        <th>Dataset</th>
+        <th>Date</th>
+        <th>Incertezza in metri</th>
+        <th>Conteggio individuale</th>
+        <th>Programma monitoraggio</th>
+        <th>Sesso</th>
+        <th>Rilevatori</th>
+        <th>Stato di vita</th>
+    </tr>
+</thead>
+{% endblock%}
+
+{% block fields %}
+    <td>{{ item.specie|default_if_none:"" }}</td>
+    <td>{{ item.datasetid|default_if_none:"" }}</td>
+    <td>{{ item.eventdate|default_if_none:"" }}</td>
+    <td>{{ item.coordinateuncertaintyinmeters|default_if_none:"" }}</td>
+    <td>{{ item.individualcount|default_if_none:"" }}</td>
+    <td>{{ item.monitoringprogramme|default_if_none:"" }}</td>
+    <td>{{ item.sex|default_if_none:"" }}</td>
+    <td>{{ item.recorder_1|default_if_none:"" }}</td>
+    <td>{{ item.lifestage|default_if_none:"" }}</td>
+{% endblock %}
+
+{% block links %}
+</tr></tr>
+{{ block.super }}
+{% endblock %}

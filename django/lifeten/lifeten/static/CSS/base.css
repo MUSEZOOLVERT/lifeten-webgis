@@ -1,0 +1,164 @@
+html, body {
+	height: 100%;
+	margin: 0 !important;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+}
+
+body {
+	position:relative;
+}
+
+h1, h2m{
+    text-align: center;
+}
+
+#request {
+    color: #ff0000;
+}
+
+.space {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.justify {
+    text-align: justify;
+}
+
+.right {
+    text-align: right;
+}
+
+.vtob {
+    vertical-align: text-top;
+}
+
+#viewins {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+/*  font-size: 12px; */
+    margin: 45px;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+#viewins th {
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px 8px;
+    color: #039;
+}
+#viewins td {
+    padding: 8px;
+    color: #669;
+}
+
+#insert table {
+    border-width: 2px;
+    border-spacing: 10px;
+    border-style: outset;
+    border-color: gray;
+    border-collapse: separate;
+    background-color: white;
+}
+
+.no-close .ui-dialog-titlebar-close {display: none }
+
+
+
+.ui-dialog 
+{ 
+   position: absolute; 
+   padding: .2em; 
+   width: 300px; 
+   overflow: hidden; 
+}
+
+tr.spaceAll > td {
+    padding: 10px;
+}
+
+#credits {
+    font-size: xx-small;
+}
+
+
+
+.push {
+    height: 55px;
+}
+
+.ui-tabs .ui-state-disabled { 
+    display: none; /* disabled tabs don't show up */ 
+} 
+
+#content {
+    margin: 0 auto -55px;
+    height: auto !important;
+    min-height: 100%;
+    height: 100%;
+    width: 95%;
+}
+
+#header{
+	text-align: center;
+	color: #161696;
+	font-size: 2em;
+}
+
+/* Footer elements */
+.footer {
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: .5em;
+	bottom: 0px;
+	width: 99%;
+	position: fixed;
+	z-index	:10000; 
+	clear: both;
+	overflow: auto;
+	}
+.footer table {
+	/*Red, Green, Blue, Alpha code */
+ 	background: rgb(255, 204, 9); /* Fall-back for browsers that don't support rgba */
+	background: rgba(255, 204, 0, .9); 
+	}	
+.logo {
+	width: 5%;
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 1em;
+	}	
+.footercell {
+	overflow: hidden;
+	text-align: right; 
+	width: 5%;
+	white-space: nowrap;
+	}
+.linkblock {
+	margin: auto;
+	}	
+
+/*			   */	
+/* Links style */
+/*			   */
+a {
+	color: #161696;
+	text-decoration: none;
+	}
+
+a:hover {
+	color:	#FFCC00;
+	}
+
+a.small { 
+    width: 105px;
+    height: 25px;
+    font-size:0.8em;
+    text-align: center;
+}	
+
+
+
+

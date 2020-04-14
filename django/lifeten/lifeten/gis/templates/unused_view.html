@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Lifeten Database: visualizza i dati {% endblock %}  
+{% block content %}
+    <div id="header">Lifeten Database: visualizza i dati</div>
+
+    <table id="hor-zebra" class="tablesorter">
+        {% block tablehead %}
+        <thead>
+            <tr  id="hor-zebra">
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        {% endblock %}
+        
+        {% block tablecontent %}
+        {% for item in data %}
+        {% if forloop.counter|divisibleby:2 %}
+            <tr id="hor-zebra" class="odd">
+        {% else %}
+            <tr id="hor-zebra">
+        {% endif %}
+        {% block fields %}
+        <td id="hor-zebra">{{ item.id }}</td> <td id="hor-zebra">{{ item.name }}</td> 
+        {% endblock %}
+<!--         <td> <input type="submit" value="Edit" /> </td> <td> <input type="submit" value="Delete" /> </td> -->
+        </tr>
+        {% endfor %}
+        {% endblock %}
+    </table>
+{% endblock %}
+{% block link %}
+    <td class='right'><a href="/lifeten" class='button small'>Homepage</a></td><td class='right'><a href="/webgis" class='button small'>webGIS</a></td>
+{% endblock %}

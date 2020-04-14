@@ -1,0 +1,83 @@
+      .button {
+        background-image: url("{{ STATIC_URL }}ui-bg_unactive.png");
+        font-size: 1em;
+        }
+    
+      img.grayscale {
+        filter: url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'><filter%20id='grayscale'><feColorMatrix%20type='matrix'%20values='0.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200%200%200%201%200'/></filter></svg>#grayscale"); /* Firefox 3.5+ */
+        filter: grayscale(100%); 
+        -webkit-filter: grayscale(100%); /* New WebKit */
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%); 
+        -o-filter: grayscale(100%);
+        filter: gray; /* IE6+ */
+       }
+
+      img:hover {
+        filter: none;
+        -webkit-filter: grayscale(0);
+        -webkit-transition: all 1s ease;
+        -moz-transition: all 1s ease;
+        -ms-transition: all 1s ease;
+        -o-transition: all 1s ease;
+        transition: all 1s ease;
+        }  
+
+      .logos {
+        /* background-color: #222222; */ 
+        display: block;
+        margin-top: 1em;
+        padding: 1em 0;
+        margin-left: -3000px;
+        padding-left: 3000px;
+        }  
+
+
+      #map { 
+        height: 180px;
+        width: 100%;
+        }
+
+      .onethird {
+        width: 33%;
+        }
+
+      img.example {
+        display: block;
+        width:100%;
+        border: 1px dotted;
+        margin-left: auto;
+        margin-right: auto;
+        }
+
+
+
+/* Caption overlay for images */
+      .imgWrap {
+        position: relative;
+        width: 100%;
+      }
+
+      .imgDescription {
+        position: absolute;
+        bottom: 1em;
+        margin-left: auto;
+        margin-right: auto;        
+        background: rgba(29, 106, 154, 0.72);
+        text-align: center;
+        color: #fff;
+        visibility: hidden;
+        opacity: 0;
+        /* Enable smooth transition between states */
+        -webkit-transition: visibility opacity 0.2s;
+        -moz-transition: all 1s ease;
+        -ms-transition: all 1s ease;
+        -o-transition: all 1s ease;
+        transition: all 1s ease;
+        }
+
+
+      .imgWrap:hover .imgDescription {
+        visibility: visible;
+        opacity: 1;
+      }        

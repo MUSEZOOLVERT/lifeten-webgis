@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load set_var %}
+
+{% block head %}
+
+<!--    <script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
+     <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js'></script>
+
+    <link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css' rel='stylesheet' />
+    <link rel="stylesheet" href="{{ STATIC_URL }}CSS/lifeten.css" />    
+
+    <script type="text/javascript">
+
+      sessvars.$.clearMem();
+      $(function() {
+        $("a.small").css({ width: '105px', height: '25px', 'font-size':'0.8em', 'text-align': 'center' });
+      });
+
+
+
+
+    </script>
+
+{% endblock %}
+{% block content %}
+  <div align="center"><img title="Lifeten logo" src="{{ STATIC_URL }}loghi/lifeten_muse.png" alt="logo Lifeten" border="0" width=500></div>
+  
+
+
+  <div id="map">
+          <script type="text/javascript">
+            var map = L.mapbox.map('map', 'examples.map-i86nkdio').setView([46.06969, 11.12109], 9);
+          </script>
+  </div>    
+  </br>    
+  <div id="header">LIFE+ T.E.N. (Trentino Ecological Network) WebGIS</div>
+  <br/>
+  
+  <div class="justify main"> <!-- Text body begins -->
+    Sono qui disponibili  i risultati dell' Azione A1 e dell'Azione A3 del <a href="http://www.lifeten.tn.it/">Progetto LIFE+ T.E.N. (Trentino Ecological Network)</a>, un progetto finanziato dalla comunità europea  che si propone di realizzare sul territorio provinciale una Rete ecologica polivalente. <br />
+    Nell'Azione A1  è stata realizzata una banca dati che riunisce tutte le informazioni disponibili sulla distribuzione e sulla consistenza delle specie e degli habitat di interesse comunitario presenti in Trentino. Tali informazioni sono frutto delle indagini e degli studi condotti e/o promossi da diversi Enti sia pubblici che privati quali Servizi provinciali, Musei, Parchi e enti di ricerca. <br />
+    Questo WebGIS  consente la consultazione della banca dati dai partner del progetto e dal pubblico,  in modo da  da favorire un'ampia diffusione delle informazioni in essa contenute e nel contempo sviluppare nella pubblica opinione la consapevolezza del valore e dell'importanza delle specie e degli habitat di interesse comunitario.
+    <br/>
+
+    <table>
+      <tr>
+        <td class="space onethird"> <h3>Cartografia</h3> </td>
+        <td class="space onethird"> <h3>Dati di dettaglio</h3> </td>
+        <td class="space onethird"> <h3>Lista specie</h3> </td>
+      </tr>
+      <tr>
+        <td class="justify space texttop onethird"> 
+          <div>Il WebGIS vi permetterà di esplorare i dati delle specie del progetto LIFE+T.E.N. su mappa, includendo sia dati puntuali di presenza che mappe di vocazionalità.</div>
+        </td>
+	      <td class="justify space texttop onethird"> 
+          <div>I dati di dettaglio relativi ad una singola specie sono disponibili qui (oltre che interrogando lo <em>shapefile</em> scaricabile dalla sezione "WebGIS"), con possibilità di filtrare il tutto in base all'area protetta o al comune di interesse.</div>
+        </td>
+        <td class="justify space texttop onethird"> 
+          <div>In questa sezione è possibile ottenere una lista delle specie inserite nel <em>database</em> a seconda dell'area protetta o del comune selezionato.</div> 
+        </td>
+      </tr>
+      <tr>
+
+         <td>
+          <div class="imgWrap">
+            <img src="{{ STATIC_URL }}img/example_webgis.png" class="example" alt="Immagine di esempio per la vista WebGIS">
+            <p class="imgDescription"> Layer di una specie attivi </p>
+            <br/>
+          </div>
+        </td>
+         <td>
+          <div class="imgWrap">
+            <img src="{{ STATIC_URL }}img/example_data.png" class= "example" alt="Immagine di esempio per la vista dati di dettaglio specie specifica">
+            <p class="imgDescription"> Dati di dettaglio relativi ad una specie </p>
+            <br/>
+          </div>
+        </td> 
+          <td>
+            <div class="imgWrap">
+              <img src="{{ STATIC_URL }}img/example_specie.png" class="example" alt="Immagine di esempio per la vista elenco specie per area protette">
+            <p class="imgDescription"> Elenco specie per area protetta </p>
+            <br/>
+            <div>  
+          </td>
+      </tr> 
+      <tr>
+        <td width="33%" class="right space"> 
+            <a href="/webgis" class="button">Vai al WebGIS</a>
+        </td>
+        <td width="33%" class="right space">
+            <a href="/viewdata" class="button">Vai ai dati</a>    
+        </td>
+        <td width="33%" class="right space">
+            <a href="/viewspecie" class="button">Vai alle specie</a>    
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="space onethird"> <h3>Geoserver</h3> </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="justify space texttop onethird"> 
+          <div>Il WebGIS include un portale di scaricamento parallelo dei dati di corredo, quali <em>shapefile</em> relativi al territorio, ma anche le cartografie <em>raster</em> dei modelli specie-specifici. Tramite lo stesso portale (GeoServer) sono attivati i servizi WMF e WFS per software GIS esterni.</div> 
+        </td>
+        <td></td>
+      </r>
+      <tr>
+        <td></td>
+        <td>
+          <div class="imgWrap">
+              <img src="{{ STATIC_URL }}img/example_geoserver.png" class="example" alt="Immagine di esempio per l'accesso al Geoserver WebGIS">
+            <p class="imgDescription"> Accesso al GeoServer </p>            
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>  
+        <td width="33%" class="right space">
+            <a href="/geoserver" class="button">Vai al Geoserver</a>    
+        </td>
+        <td></td>
+      </tr>             
+  <!--    <tr> 
+      <td colspan=2 class="justify"><a href="javascript:login()" class="button small">Autentificati</a><br /><small>Se non hai un utente puoi accendere con l'utente <i>ospite</i> e la password <i>lifeten</i></small></td>
+      <tr>-->
+    </table>
+  <h4>Visualizzazione e proprietà dei dati</h4>
+    Al fine di tutelare le specie più sensibili alla divulgazione di un dato preciso i dati verranno visualizzati in maniera differente a seconda dell'utente.
+  <h4>Ente fornitore dei dati</h4>
+    Ad ogni partner viene garantito l'accesso completo per visualizzazione e download dei dati di sua proprietà. I dati forniti da altri enti saranno visualizzati su una griglia di presenza con maglia di  1, 5 oppure  10 chilometri a seconda di un criterio di tutela della specie o di riservatezza del dato.
+  <h4>Parchi e uffici con specifiche competenze geografiche</h4> 
+    Potranno avere accesso allo scaricamento e alla consultazione del dato puntiforme all'interno del loro territorio di competenza, se concesso dal proprietario del dato. Al di fuori del proprio territorio di competenza i dati saranno visualizzati su una griglia di presenza con maglia di  1, 5 oppure  10 chilometri a seconda della sensibilità del dato.
+  <h4>Pubblico</h4> 
+    Per il pubblico generico i dati di presenza saranno visualizzati su una griglia a maglia diversa (1, 5 oppure 10 chilometri di lato) a seconda della sensibilità del dato.
+  <br/>
+  <b>Questo WEBGIS è il risultato della condivisione delle banche dati di</b>:
+
+    <div class="logos" >
+    <table>
+      <tr>
+        <td width="15%" align="center"><a href="http://www.provincia.tn.it/"><img src="{{ STATIC_URL }}loghi/provincia_trento_logo.png" class="grayscale" title="Provincia Autonoma di Trento" alt="Logo Provincia Autonoma di Trento" height="100em"></a></td>
+        <td width="15%" align="center"><a href="http://www.muse.it/it"><img src="{{ STATIC_URL }}loghi/logo_MUSE_verde_nospace.png" class="grayscale" title="Museo delle scienze" alt="Logo Museo delle scienze" height="100em"></a></td>
+        <td width="16%" align="center"><a href="http://www.museocivico.rovereto.tn.it/"><img src="{{ STATIC_URL }}loghi/Logo_MCR.png" class="grayscale" title="Museo Civico di Rovereto" alt="Logo Museo Civico di Rovereto" height="100em"></a></td>
+        <td width="15%" align="center"><a href="http://www.fmach.it/"><img src="{{ STATIC_URL }}loghi/logo_fem_new.png" class="grayscale" title="Fondazione Edmund Mach" alt="Logo Fondazione Edmund Mach" height="100em"></a></td>
+        <td width="15%" align="center"><a href="http://www.pnab.it/"><img src="{{ STATIC_URL }}loghi/adamello_brenta.png" class="grayscale" title="Parco Naturale Adamello Brenta" alt="Logo Parco Naturale Adamello Brenta" height="100em"></a></td>
+        <td width="15%" align="center"><a href="http://www.stelviopark.it/"><img src="{{ STATIC_URL }}loghi/stelvio.png" class="grayscale" title="Parco Nazionale dello Stelvio" alt="Logo Parco Nazionale dello Stelvio" height="200em"></a></td>
+        <td width="15%" align="center"><a href="http://www.parcopan.org/"><img src="{{ STATIC_URL }}loghi/paneveggio.png" class="grayscale" title="Parco Naturale Paneveggio - Pale San Martino" alt="Logo Parco Naturale Paneveggio - Pale San Martino" height="100em"></a></td>
+      </tr>
+    </table>
+    <div>
+</div>  <!-- Text body ends -->
+<br/>
+{% endblock %}
+{% block link %}
+<!--
+<div class="linkblock">
+    <td style="footercell"><a href="/lifeten" class='button small'>Homepage</a></td>
+    <td style="footercell"><a href="/viewdata" class='button small'>Dati</a></td>
+    <td style="footercell"><a href="/viewspecie" class='button small'>Specie</a>
+    <td style="footercell"><a href="{{ STATIC_URL }}docs/webgis_manual.pdf" target="_blank" class='button small'>Manuale</a>
+</div> 
+-->
+{% endblock %}

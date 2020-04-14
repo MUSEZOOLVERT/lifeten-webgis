@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="header">Lifeten Database: standard adottati</div>
+
+<div class="content">
+  <div class="section">
+  <h3>Ringraziamenti</h3>
+    <p>Il database del <a href ="http://www.lifeten.tn.it/">Progetto 
+      LIFE+ T.E.N. </A>(Trentino Ecological Network) sul 
+      quale si fonda la visualizzazione dati del WebGIS &egrave; frutto del 
+      lavoro di recupero, standardizzazione ed implementazione da parte di 
+      MUSE - Museo delle Scienze, nell'ambito dell'Azione A1. I dati 
+      raccolti provengono dai numerosi dataset forniti dai 
+      musei, parchi, servizi provinciali e enti di ricerca e documentazione 
+      della PAT qui di seguito elencati. Senza i loro decennali 
+      sforzi di campionamento e catalogazione della fauna e flora trentina 
+      questa produzione sarebbe spoglia di ogni contenuto.</p> 
+
+      <p>Si ringraziano quindi:</p> 
+      <ul>
+        <li>Cristina Bruno, Bruno Maiolini, Heidi Hauffe e Cristiano Veronesi, della Fondazione Edmund Mach;</li>
+        <li>Filippo Prosser e Alessio Bertolli, della Fondazione Museo Civico di Rovereto;</li>
+        <li>Natalia Bragalanti, Sonia Endrizzi, Maria Chiara Deflorian, Mauro Gobbi e Valeria Lencioni del MUSE;</li>
+        <li>Roberto Zoanetti, Andrea Mustoni e Filippo Zibordi del Parco Naturale Adamello Brenta;</li>
+        <li>Vittorio Ducoli e Piergiovanni Partel del Parco Naturale Paneveggio / Pale di S. Martino;</li>
+        <li>Augusta Conta e Natalia Bragalanti del Parco Nazionale dello Stelvio;</li>
+        <li>Lucio Sottovia e Daniele Bassan del Servizio Conservazione Natura e Valorizzazione Ambientale;</li>
+        <li>Ruggiero Giovannini, Natalia Bragalanti, Claudio Groff e Leonardo Pontalti del Servizio Foreste e Fauna</li>
+      </ul>
+  </div>
+  <div class="section">
+  <h3>Database e WebGIS</h3>
+    <p>Hanno curato la strutturazione del database e l'archiviazione dei dati pervenuti <a href="mailto:aaron.iemma@muse.it">Aaron Iemma</a>, <a href="mailto:clara.tattoni@muse.it">Clara Tattoni</a> e <a href="mailto:paolo.pedrini@muse.it">Paolo Pedrini (coord.)</a>, della Sezione Zoologia dei Vertebrati del MUSE - Museo delle Scienze.</p>
+    <p>La visualizzazione dei contenuti, e l'implementazione del collegamento tra il database e l'interfaccia grafica, &egrave; stata sviluppata e costruita da <a href="mailto:luca.delucchi@fmach.it">Luca Delucchi</a> della Fondazione Edmund Mach - Dipartimento di Biodiversit&agrave; e Biologia Molecolare, GIS and Remote
+    Sensing Unit.</p>
+    <p> Gli aggiornamenti dell'interfaccia, dell'organizzazione del database e l'ordinaria amministrazione del <em> framework </em> creato sono da Marzo 2014 a cura della Sezione di Zoologia dei Vertebrati del MUSE </p>
+  </div>
+
+  <div class="section">
+  <h3>Standard</h3>
+    <p>Struttura, nomi e tipologie dei campi delle tabelle sono stati progettati per aderire il pi&ugrave; possibile allo standard di immagazzinamento <a href="https://code.google.com/p/darwincore/">Darwin Core</a>, un set di termini standardizzato dal <a href="http://www.tdwg.org/">BIS-TDWG</a> (Biodiversity Information Standards &ndash; Taxonomic Databases Working Group) adattandolo ove necessario alle peculiarit&agrave; dei dati trattati.</p>
+    <p>I nomi scientifici delle specie sono conformi alla nomenclatura proposta dall'<a href="http://www.itis.gov/">Integrated Taxonomic Information System</a> (ITIS), sulla cui base il database aggiorna automaticamente la nomenclatura scientifica più recente. Alcune specie chiave potrebbero tuttavia differire dalla nomenclatura proposta per esigenze di concordanza con altri database nazionali, nel dettaglio:  
+    </p>
+      <ul>
+        <li>per gli Uccelli il riferimento adottato &egrave; la lista del <a href="http://ciso-coi.it/">Centro Italiano Studi Ornitologici</a> (CISO) aggiornata   al settembre 2009.</p>
+        <li>per i Mammiferi si &egrave; fatto riferimento alla tassonomia proposta dall'Universit&agrave; di Bucknell nella sua <a href="http://www.departments.bucknell.edu/biology/resources/msw3/browse.asp">Mammal Species of the World</a>, e per i Chirotteri a quella del <a href="http://www.pipistrelli.net/">Gruppo Italiano Ricerca Chirotteri</a>.</p>
+      </ul>
+    <p>Per compilare i dati delle liste rosse locali si sono utilizzate le informazioni riportate in:</p>
+      <ul>
+        <li>Prosser, F. (2001) - <i>Lista Rossa della Flora del Trentino. Pteridofite e Fanerogame</i> - LXXXIX pubblicazione della Fondazione Museo Civico di  Rovereto, 107 pp.</li>
+        <li>Betti L., <i>Lista Rossa dei Pesci della Provincia di Trento</i>. Biologia Ambientale, - 20 (1): 1-5. (2006)</li>
+        <li>Caldonazzi, M., Pedrini, P. &amp; Zanghellini, S. (2002) <i>Atlante degli Anfibi e dei Rettili della Provincia di Trento </i>(Amphibia, Reptilia),   1987-1996 con aggiornamenti al 2001. Studi Trentini di Scienze Naturali, Acta Biologica, 77 pp. 1-173.</li>
+        <li>Pedrini, P., Calzonazzi, M. &amp; Zanghellini, S. (a cura di) (2003) <i>Atlante degli uccelli nidificanti e svernanti in provincia di Trento</i>.   Studi Trentini di Scienze Naturali, Acta Biologica, 80, suppl. 2: 692 pp.</li>
+        <li><i>Atlante del Mammiferi in Trentino </i>(AAVV. in prep./MUSE)</li>
+       </ul>
+    <p>Per quanto riguarda lo status della Lista Rossa nazionale, sono state consultate varie fonti:</p>
+      <ul>
+        <li>Rondinini, C., Battistoni, A., Peronace, V., Teofili, C. (compilatori). (2013) <i>Lista Rossa IUCN dei Vertebrati Italiani</i>. Comitato Italiano   IUCN e Ministero dell’Ambiente e della Tutela del Territorio e del Mare. Roma.</li>
+        <li>Rossi G., Montagnani C., Gargano D., Peruzzi L., Abeli T., Ravera S., Cogoni A., Fenu G., Magrini S., Gennai M., Foggi B., Wagensommer R.P.,   Venturella G., Blasi C., Raimondo F.M., Orsenigo S. (Eds.) (2013) <i>Lista Rossa della Flora Italiana</i>. 1. Policy Species e altre specie minacciate. Comitato Italiano IUCN e Ministero dell’Ambiente e della Tutela del Territorio e del Mare.</li>
+        <li>Bulgarini F., Calvario E., Fraticelli F., Petretti F., Sarrocco S. (Eds) (1998) <i>Libro Rosso degli Animali d’Italia </i>- Vertebrati. WWF Italia - ONLUS, Roma.</li>
+        <li>Cerfoli F., Petrassi F., Petretti F. (Eds). (2002) <i>Libro Rosso degli Animali d’Italia </i>- Invertebrati. WWF Italia - ONLUS, Roma.</li>
+        <li><i>Lista Rossa Nazionale dei Mammiferi </i>- parte sui Chirotteri a cura del Gruppo Italiano Ricerca Chirotteri </li>
+      </ul>
+  </div>
+  <div class="section">
+  <h3>Software</h3>
+    <p>Tutto il complesso di database e WebGIS &egrave; stato costruito con l'ausilio di software completamente OpenSource, partendo dal sistema operativo sul quale le piattaforme sono state sviluppate (Ubuntu 12.04 LTS). Nel dettaglio: </p>
+      <ul>
+        <li><a href="http://www.postgresql.org/">PostgreSQL</a> e <a href="http://www.postgis.org/">PostGIS</a>, per l'archiviazione dei dati;</li>
+        <li><a href="https://www.djangoproject.com/">Django</a>, per l'amministrazione e la configurazione delle componenti;</li>
+        <li><a href="http://jquery.com/">JQuery</a> e <a href="http://jqueryui.com/">JQuery UI</a>, per la creazione dell'interfaccia WebGIS e la gestione delle interazioni con l'utente;</li>
+        <li><a href="http://openlayers.org/">OpenLayers</a>, per la visualizzazione della cartografia.</li>
+      </ul>
+    <p>Ai seguenti link sono disponibili, liberamente scaricabili:</p>
+      <ul>
+        <li><a href="http://www.lifeten.tn.it/actions/preliminary_actions/pagina1.html">Report dell'Azione A1</a> del progetto LIFE + T.E.N.;</li>
+        <li><a href="http://www.lifeten.tn.it/actions/preliminary_actions/pagina3.html">Report ed allegati dell'Azione A3</a> del progetto LIFE + T.E.N.;</li>
+  <!-- <li><a href="doc/checklist_database_lifeten.pdf">Checklist delle specie prioritarie</A> presenti all'interno del database, visualizzabili all'interno del WebGIS (con livello di dettaglio variante in base ai permessi accordati al singolo utente), già in allegato al report dell'Azione A1;</p> -->
+      </ul>
+  </div>
+  <div class="section">
+  <h3>Tutorial</h3>
+<!-- <p>Procedendo <a href="webgis_manual_WEB.html" TARGET="_blank">al seguente
+link</a> &egrave; possibile accedere ad un breve tutorial sulle funzionalit&agrave;
+del WebGIS. Lo stesso tutorial &egrave; integralmente scaricabile in
+formato <tt>.pdf</t> dal seguente link:</p> -->
+    <p> Al seguente link è possibile scaricare un breve <em> tutorial </em> esplorativo delle funzionalit&agrave; del WebGIS (IN AGGIORNAMENTO) :</p>
+    <ul>
+      <li><a href="{{ STATIC_URL }}docs/webgis_manual.pdf">Tutorial esplorativo sulle funzionalit&agrave; del WebGIS</a>.</li>
+    </ul>
+</div> <!-- End of content block -->    
+{% endblock %}
+{% block link %}
+    {% if user.is_authenticated %}
+      <td class='footercell'><a href="/viewdata" class='button small'>Dati tabellari</a></td>
+      <td class='footercell'><a href="/viewspecie" class='button small'>Lista specie</a></td>
+      <td class='footercell'><a href="/webgis" class='button small'>WebGIS</a></td>
+      <td class='footercell'><a href="/lifeten" class='button small'>Homepage</a></td>
+    {% else %}
+      <td class='footercell'><a href="/lifeten" class='button small'>Homepage</a></td>
+    {% endif %}
+{% endblock %}

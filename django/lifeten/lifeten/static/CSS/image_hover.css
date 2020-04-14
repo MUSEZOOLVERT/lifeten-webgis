@@ -1,0 +1,28 @@
+.imgWrap {
+  position: relative;
+  width: 90%;
+}
+
+.imgDescription {
+  position: absolute;
+  bottom: 1em;
+  left: 0;
+  right: 0;
+  background: rgba(29, 106, 154, 0.72);
+  text-align: center;
+  color: #fff;
+
+
+  visibility: hidden;
+  opacity: 0;
+
+  /*remove comment if you want a gradual transition between states
+  -webkit-transition: visibility opacity 0.2s;
+  */
+}
+
+
+.imgWrap:hover .imgDescription {
+  visibility: visible;
+  opacity: 1;
+}

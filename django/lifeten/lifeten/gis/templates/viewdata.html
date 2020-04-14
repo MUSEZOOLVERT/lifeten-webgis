@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Lifeten Database: visualizza i dati {% endblock %}
+
+{% block head %}
+  <script type="text/javascript" src="{{ STATIC_URL }}tablesorter/jquery.tablesorter.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}jquery.tablesorter.scroller.js"></script>  
+  <script type="text/javascript" src="{{ STATIC_URL }}functions.js"></script>
+  <link rel="stylesheet" href="{{ STATIC_URL }}tablesorter/themes/blue/style.css" />
+
+  <style>
+  	
+  	img.inline {
+  		width: 1em;
+  		vertical-align:middle;
+  	}
+
+  </style>
+  	
+  		<!-- Logging function, for  future reference -->
+    	<script type="text/javascript">
+    	$(document).ready(function() {
+	  		$("#comune").on("click",function() {
+	  			var comune_name = $("#comune option:selected").text();
+	  			var comune_code = $("#comune").val()
+	  			if (comune_code == 'default')
+	  			{
+	  				console.log("Valore di default per il comune selezionato");
+	  			}
+	  			else
+	  			{
+	  				console.log("Hai selezionato il comune di '", comune_name ,"'");
+	  			}
+	  		});
+	  		$('#datatable').tablesorter();
+		 });
+		</script>
+
+  <script type="text/javascript">
+    var availableSpecie, availableGenere, datatable, pagesize, area, type, specie;
+
+    // Inizializza le varie liste: avaiableSpecie, #area (menu a tendina) e #comune (menu a tendina) 
+    function init(){
+		sessvars.$.clearMem();
+		pagesize = getPageSize();
+
+		// Array per contenere il nome scientifico e il nome comune delle specie
+		availableSpecie = new Array();
+		// Popola array delle specie disponibili
+		$.getJSON('/returnlistspecie/', function(data){
+	  		for(var j = 0; j < data.length; j++){
+	    		availableSpecie.push(data[j].fields.scientificname);
+	    		if (data[j].fields.vernacularname != null){
+	      			availableSpecie.push(data[j].fields.vernacularname);
+	    		}
+	  		}
+		});
+		
+		$("#tagspecie").autocomplete({ source: availableSpecie });
+		
+		// crea lista per genere
+		availableGenere = new Array();
+		// Popola la lista a cascata delle aree (TODO: AGGIUNGERE QUI UN FILTRO SULLA SELEZIONE EVENTUALE DEL COMUNE DAL MENU A TENDINA)
+		$.getJSON('/returnlistaree/', function(data){
+	  		for(var j = 0; j < data.length; j++){
+	    		var newOption = $("<option></option>").text(data[j].fields.nome + ' ('+data[j].fields.tipo+')').val(data[j].pk);
+	    	$('#area').append(newOption);
+	  		}
+		});
+		
+		// Popola la lista a cascata dei comuni (TODO: AGGIUNGERE QUI UN FILTRO SULLA SELEZIONE EVENTUALE DELL'AREA DAL MENU A TENDINA)
+		$.getJSON('/returnlistcomuni/', function(data){
+	  		for(var j = 0; j < data.length; j++){
+	    		var newOption = $("<option></option>").text(data[j].fields.nome).val(data[j].pk);
+	    	$('#comune').append(newOption);
+	  		}
+		});
+	
+		// Nasconde lo spinner quando il caricamento dei dati dal database è terminato
+		$('#spinner').hide();
+
+    } ///////// CHIUSURA FUNZIONE DI INIZIALIZZAZIONE /////////
+
+    // Visualizza la tabella con caricati i dati di cui sopra
+    function table(){
+        var head_area = '';
+        var credit = "<small>Questi dati sono forniti da:";
+        var instiPresent = new Array();
+        // Header della tabella
+        datatable = '<table id="hor-zebra" class="tablesorter">'+
+        '<thead>'+
+            '<tr id="hor-zebra">'+
+                '<th>Specie</th>'+
+                '<th>Dataset</th>'+
+                '<th>Data</th>'+
+                '<th>Località</th>'+
+                '<th># individui</th>'+
+                '<th>Programma</th>'+
+                '<th>Maschi</th>'+
+                '<th>Femmine</th>'+
+                '<th>Rilevatori</th>'+
+                '<th>Embrioni/uova</th>'+
+                '<th>Larve/girini</th>'+
+                '<th>Giovani</th>'+
+                '<th>Immaturi</th>'+
+                '<th>Subadulti</th>'+
+                '<th>Adulti</th>'+
+                '<th>Coppie</th>'+
+            '</tr>'+
+        '</thead>'+
+        '<tbody>';	
+        
+	    if($('#comune').val() == undefined) {
+		    if (
+		    	$('#area').val() != 'default'){
+				area = $('#area').val();
+				type = 'park';
+				area_name = $('#area').find(":selected").text()
+				head_area = ' per l\'area protetta <b>' + area_name + '</b>';
+				$('#area').val(0);
+				returnBbox(area, type)
+		    } 
+		    else {
+				area = 'default';
+		    }
+		} else {
+		    if ($('#area').val() != 'default' && $('#comune').val() != 'default'){
+				alert('Selezionare solo uno tra areee protette e comuni');
+				return 0;
+		    } 
+		    else if ($('#area').val() != 'default'){
+				area = $('#area').val();
+				type = 'park';
+				area_name = $('#area').find(":selected").text()
+				head_area = ' per l\'<b>area protetta ' + area_name + '</b>';
+				$('#area').val(0);
+				returnBbox(area, type)
+		    } 
+		    else if ($('#comune').val() != 'default'){
+				area = $('#comune').val();
+				type = 'muni';
+				area_name = $('#comune').find(":selected").text()
+				head_area = ' per il <b>comune ' + area_name + '</b>';
+				$('#comune').val(0);
+				returnBbox(area, type)
+		    } 
+		    else {
+			area = 'default';
+		    }		
+		};
+
+        if ($("#tagspecie").val() == ''){
+	        datatable = '';
+	        credit = '';
+	        alert('Selezionare almeno uno tra specie e genere');
+            // if only specie is selected
+        } else if ($("#tagspecie").val() != ''){
+	        // return 
+	        specie = $("#tagspecie").val();
+	        head = 'Dati della specie <b>' + specie + '</b>' + head_area + '<br />';
+	        $("#export").remove();
+	        $("#datatable").text('');
+	        wait(true);  
+	        $.getJSON("/returninstifromspecie/" + specie + '/' + area + '/' + type).done(function(data){
+	            for(var j = 0; j < data.length; j++){
+	                if ($.inArray(data[j].fields.institutionid[0], instiPresent) == -1){
+	                    instiPresent.push(data[j].fields.institutionid[0]);
+	                    if (j != 0){
+		                    credit += ", <b>" + data[j].fields.institutionid[0] + "</b>";
+	                    } else {
+		                    credit += "<b> " + data[j].fields.institutionid[0] + "</b>";
+	                    }
+	                }
+	            }
+	    
+	    function checkZero(input) {
+	    	if(input==0) {
+	    		return '-';
+	    	} else return input;
+	    }
+	    $.getJSON('/returndatafromspecie/' + specie + '/' + area + '/' + type).done(function(data){
+	    for(var j = 0; j < data.length; j++){
+	      datatable += '<tr><td>'+data[j].fields.specie[4]+'</td> <td>'+data[j].fields.datasetid[0]+'</td> <td>'+checkNull2(data[j].fields.eventdate)+'</td> <td>'+checkNull2(data[j].fields.locality)+'</td> <td>'+data[j].fields.individualcount+'</td> <td>'+checkNull2(data[j].fields.monitoringprogramme)+'</td> <td>'
+	      if (data[j].fields.sex != null){
+		datatable += checkZero(data[j].fields.sex[0]) +'</td> <td>'+ checkZero(data[j].fields.sex[1])
+	      } else {
+		datatable += ' - </td> <td> - '
+	      }
+	      datatable += '</td><td>'+checkNull2(data[j].fields.recorder_1)+'</td> <td>'
+	      if (data[j].fields.lifestage != null){
+		datatable += checkZero(data[j].fields.lifestage[0]) + '</td> <td>' + checkZero(data[j].fields.lifestage[1]) + '</td> <td>' + checkZero(data[j].fields.lifestage[2]) + '</td> <td>' + checkZero(data[j].fields.lifestage[3]) + '</td> <td>' + checkZero(data[j].fields.lifestage[4]) + '</td> <td>' + checkZero(data[j].fields.lifestage[5]) + '</td> <td>' + checkZero(data[j].fields.lifestage[6]);
+	      } else {
+		datatable += ' - </td> <td> - </td> <td> - </td> <td> - </td> <td> - </td> <td> - </td> <td> - ';
+	      }
+	      datatable += '</td></tr>';
+	    }
+		// Zoom all'area
+		if ($('#area').val() != 'default') {
+			var addr;
+			if(area_name.indexOf('UNESCO')!=-1) {
+				addr = "http://webgis.muse.it/webgis?layers=BTFFFFFTFFFFFFFFFFFFFFFT";
+			} else if(area_name.indexOf('Biotopo')!=-1) {
+				addr = "http://webgis.muse.it/webgis?layers=BTFFFFFFFFTFFFFFFFFFFFFT";
+			} else if(area_name.indexOf('ZPS')!=-1) {
+				addr = "http://webgis.muse.it/webgis?layers=BTFFFFFFTFFFFFFFFFFFFFFT";
+			} else if(area_name.indexOf('SIC')!=-1) {
+				addr = "http://webgis.muse.it/webgis?layers=BTFFFFTFFFFFFFFFFFFFFFFT";
+			}
+			$("#selectors").append('<td><a id="goto" href="' + addr + '" class="button">Vai a ' + area_name + '</a></td>');
+		}
+		// Esportazione dati, tramite la view returnlistspecie
+		$("#selectors").append('<td><a id="export" href="javascript:exportData()" class="button">Esporta dati</a></td>')
+
+	    //$("#export").attr("disabled", "disabled");
+	    $("a.button").button();
+	    credit += "</small>";
+	    datatable += '</tbody></table>';
+	    $("#datatable").append(head);
+	    $("#datatable").append(credit);
+	    $("#datatable").append(datatable);
+	    //$("#hor-zebra").tablesorter({
+	    //  scrollHeight: pagesize[3] - 320,
+	    //  widgets: ['']
+	    //});
+	    wait(false);
+	  }).fail(function(data){
+	    datatable = '';
+	    credit = '';
+	    head = 'Nessun dato per la specie <b>' + specie + '</b>' + head_area + '<br />';
+	    credit += "</small>";
+	    datatable += '</tbody></table>';
+	    $("#datatable").append(head);
+	    $("#datatable").append(credit);
+	    wait(false);
+	    alert(data.responseText);
+	  });
+	}).fail(function(data){
+	  wait(false);
+	  alert(data.responseText);
+	});
+	$("#tagspecie").val('')
+      // if only genus is selected
+      } 
+
+    }
+    function exportData(url) {
+      window.location.href = '/' + url + '/' + specie + '/' + area + '/' + type + '/True';
+    }
+  </script>
+{% endblock %}
+
+{% block content %}
+  <body onload="init()">
+    <div id="header">DATI DI DETTAGLIO</div>
+    <hr>
+    <!-- <div id="descri">
+    	<ul>
+    		<li>
+    			Digitare il nome comune o il nome scientifico di una specie nel <em>tab</em> <strong>Seleziona specie</strong>, quindi su <strong>Richiedi dati</strong> per ottenere le informazioni di tutti i rilevamenti contenuti nel database relativi alla particolare specie cercata. 
+    			<br/>	
+    			<img src="{{ STATIC_URL }}icons/alert.png" class="inline"/> Per specie molto rilevate, la restituzione delle informazioni pu&ograve; richiedere molto tempo.
+    		</li>
+    		<li>
+    			La ricerca può essere raffinata per area protetta o per comune selezionando la zona desiderata dai rispettivi menu a tendina. 
+    			<br/>
+    			<img src="{{ STATIC_URL }}icons/alert.png" class="inline"/> La ricerca incrociata tra area protetta e comune è in corso di implementazione.
+    			<br/>
+    			<img src="{{ STATIC_URL }}icons/alert.png" class="inline"/> Momentaneamente il sistema permette di interrogare aree in cui la specie NON &Egrave; effettivamente presente, visualizzando in questo caso una tabella vuota. Il raffinamento delle aree e dei comuni in cui la specie selezionata &egrave; effettivamente presente &egrave; in corso di implementazione.
+ 			</li>
+ 			<li>
+ 				In tutti i casi, la ricerca può essere salvata su un file CSV (<em> Comma Separated Value </em>) cliccando sul tasto <strong> Esporta dati </strong> che compare una volta caricati i risultati della ricerca.
+ 			</li>
+ 		</ul>
+ 	</div>-->
+
+	<table width="100%">
+		<tr id="managers">
+			<td style="width: 25%"><label for="tagspecie"><b>Ricerca specie</b>: </label> <input id="tagspecie" /> </td>
+			<td style="width: 25%">
+				<select id="area" style="font-size: 8pt;width: 50%">
+				  <option value="default" selected="selected">Area</option>
+				</select>
+			</td>
+			<!--<td>
+			<select id="comune">
+			  <option value="default" selected="selected">Seleziona per comune</option>
+			</select>
+			</td>
+			</tr>
+			<tr> -->
+			<td id="buttondati" style="width: 28%"><a href="javascript:table()" class="button" id='datirequest'>Richiedi dati</a> </td>
+			<td>
+			</td>
+		</tr>
+		<tr id="selectors">
+		</tr>
+	</table>
+
+    <div id="spinner"><img src="{{ STATIC_URL }}icons/spinner.gif" alt="Caricamento" /></div>
+    <div id="datatable"></div>
+
+	
+
+{% endblock %}
+
+{% block link %}
+<div class="linkblock">
+    <td class="footercell"><a href="/lifeten" class='button small'>Homepage</a></td>
+    <td class="footercell"><a href="/webgis" class='button small'>WebGIS</a></td>
+    <td class="footercell"><a href="/viewspecie" class='button small'>Lista specie</a>	
+</div> 
+{% endblock %}

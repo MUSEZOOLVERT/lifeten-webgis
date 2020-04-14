@@ -1,0 +1,4 @@
+<WCS_GDAL>
+    <ServiceURL>http://localhost/cgi-bin/wcs</ServiceURL>
+    <CoverageName>dmt</CoverageName>
+</WCS_GDAL>

@@ -1,0 +1,125 @@
+html, body {
+	height: 100%;
+	margin: 0 !important;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+}
+
+body {
+  position:relative;
+}
+
+h1, h2m{
+    text-align: center;
+}
+
+#header {
+    width: 100%;
+    height: 40px;
+    margin: 0;
+    color: #0f4279;
+    font-size: xx-large;
+    text-align: center;
+    font-weight:bold;
+    text-shadow: !important  0px;
+}
+
+#request {
+    color: #ff0000;
+}
+
+.space {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.justify {
+    text-align: justify;
+}
+
+.right {
+    text-align: right;
+}
+
+.vtob {
+    vertical-align: text-top;
+}
+
+#viewins {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+/*     font-size: 12px; */
+    margin: 45px;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+#viewins th {
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px 8px;
+    color: #039;
+}
+#viewins td {
+    padding: 8px;
+    color: #669;
+}
+
+#insert table {
+    border-width: 2px;
+    border-spacing: 10px;
+    border-style: outset;
+    border-color: gray;
+    border-collapse: separate;
+    background-color: white;
+}
+
+.no-close .ui-dialog-titlebar-close {display: none }
+
+a.small { 
+    width: 105px;
+    height: 25px;
+    font-size:0.8em;
+    text-align: center;
+}
+
+.ui-dialog 
+{ 
+   position: absolute; 
+   padding: .2em; 
+   width: 300px; 
+   overflow: hidden; 
+}
+
+tr.spaceAll > td {
+    padding: 10px;
+}
+
+#credits {
+    font-size: xx-small;
+}
+
+.footer {
+    width: 100%;
+    height: 55px;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    /*text-align, background-color, and other specific styles can be applied here. You can change the height from 30px to anything which suits your needs. You can even comment Left: 0px & Right: 0px, but to make sure that it works in all browsers, lets leave them there.*/
+}
+
+.push {
+    height: 55px;
+}
+
+.ui-tabs .ui-state-disabled { 
+    display: none; /* disabled tabs don't show up */ 
+} 
+
+#content {
+    margin: 0 auto -55px;
+    height: auto !important;
+    min-height: 100%;
+    height: 100%;
+    width: 95%;
+}

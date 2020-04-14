@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/wwwlibs/ext/3.3.1-hsrs/resources/css/ext-all.css" />
+    <script type="text/javascript" src="/wwwlibs/ext/3.3.1-hsrs/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="/wwwlibs/ext/3.3.1-hsrs/ext-all.js"></script>
+    <script type="text/javascript" src="../build/OpenLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers/Util.js"></script>
+    <script type="text/javascript" src="../source/HSLayers/Control/LayerSwitcher.js"></script>
+
+    <title>Testing HSLayers.Format.PrinterContext</title>
+    <script type="text/javascript">
+
+    var map;
+    var test;
+
+    function test_case(t) {
+
+        OpenLayers.ProxyHost = "/cgi-bin/olproxy.cgi?url=";
+
+        test = t;
+        t.plan(13);
+
+        map = new OpenLayers.Map("map", HSLayers.Util.getProjectionOptions("epsg:102067",1000000,500));
+
+        var wmsLayer = new OpenLayers.Layer.WMS("Lesy",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'les'},
+                    {
+                        attribution: "Never use this data &copy;",
+                        legend: "http://foo/bar.jpg",
+
+                        metadata:  {
+                            format: "application/xml",
+                            href: "http://maps.kraj-lbc.cz/metadata/csw/?service=CSW&version=2.0.2&request=GetRecordById&id=4293E8A0-D0",
+                            type: "ISO19115:2003"
+                        }
+                    }
+                );
+
+        var wmsLayer2 = new OpenLayers.Layer.WMS("Lesy 2",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'dem_color'},
+                    {
+                        isBaseLayer: false,
+                        visibility: true,
+                        attribution: {
+                            href: "http://foo/bar",
+                            title: "Foo bar",
+                            logo: {
+                                format: "image/gif",
+                                height: 42,
+                                width: 110,
+                                href: "http://www.kraj-lbc.cz/_templates/kraj/images/logo.gif"
+                            }
+                        },
+
+                        legend:  {
+                                format: "image/gif",
+                                height:15,
+                                width: 25,
+                                href: "http://bnhelp.netart.cz/cgi-bin/crtopo?mode=legend&layer=dem_color"
+                        }, 
+
+                        metadata:  {
+                            format: "text/plain",
+                            href: "http://www.bnhelp.cz/metadata/micka_main.php?ak=detail&uuid=c9330510-0510-1933-a57d-c88088beb3f3",
+                            type: "TC211"
+                        }
+                    }
+                );
+
+        var wmsLayer3 = new OpenLayers.Layer.WMS("Lesy 3",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'les'}
+                );
+
+        var wmsLayer4 = new OpenLayers.Layer.WMS("Lesy 4",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'les'},
+                    {
+                        metadata:  {
+                            format: "text/xml",
+                            href: "http://www.bnhelp.cz/metadata/micka_main.php?ak=detail&uuid=c9330510-0510-1933-a57d-c88088beb3f3",
+                            type: "ISO/TC211"
+                        }
+                    }
+                );
+
+        map.addLayer(wmsLayer);
+        map.addLayer(wmsLayer2);
+        map.addLayer(wmsLayer3);
+        map.addLayer(wmsLayer4);
+        map.zoomToMaxExtent();
+        map.zoomTo(4);
+
+
+        var ls = new HSLayers.Control.LayerSwitcher({container: "ls"});
+
+        map.addControl(ls);
+
+        t.ok(ls instanceof HSLayers.Control.LayerSwitcher);
+
+        // legend
+        t.ok(ls.groups["Lesy"].legendURLs.length == 1);
+        t.ok(ls.groups["Lesy"].legendURLs[0] == wmsLayer.legend.href);
+        t.ok(ls.groups["Lesy 2"].legendURLs[0] == wmsLayer2.legend.href);
+        t.ok(ls.groups["Lesy 2"].legendURLs[0] == wmsLayer2.legend.href);
+
+        // metadata
+        t.eq(ls.groups["Lesy"].metadataURLs.length,1,"One metadata element ound in group Lesy");
+        t.eq(ls.groups["Lesy"].getLayerMetadata().length,1,"One metadata element is going to be rendered in the menu");
+        t.eq(ls.groups["Lesy"].getLayerMetadata()[0].href.search("http://geoportal.gov.cz"),0,"Metadata is ISO and will be redirected to XML template client");
+
+        t.eq(ls.groups["Lesy 2"].metadataURLs.length,1,"One metadata element found in group Lesy 2");
+        t.eq(ls.groups["Lesy 2"].getLayerMetadata().length,1,"One metadata element is going to be rendered in the menu");
+        t.eq(ls.groups["Lesy 2"].getLayerMetadata()[0].href, wmsLayer2.metadata.href,"No metadata XML client will be used ");
+
+        t.eq(ls.groups["Lesy 3"].getLayerMetadata(),null,"None metadata element will be rendered in the menu");
+
+        t.eq(ls.groups["Lesy 4"].getLayerMetadata()[0].href.search("http://geoportal.gov.cz"),0,
+                "ISO/TC211, text/xml, metadata will be displayed in the XML client");
+
+    };
+
+    // this function lounches the test case as normal page
+    var init  = function() {
+        var t = {
+            plan: function(){},
+            ok: function() {},
+            eq: function() {}
+        }
+
+        test_case(t);
+    }
+
+
+  </script>
+</head>
+<body>
+    <h1>LayerSwitcher test</h1>
+    <input type="button" onclick="init()" value="init" />
+    <div id="map" style="width: 600px; height: 600px; float:left;"></div>
+    <div id="ls" style="clear:right;"></div>
+</body>
+</html>

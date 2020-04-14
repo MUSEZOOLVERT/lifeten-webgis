@@ -1,0 +1,11 @@
+<?php
+
+define('EXTJS_RELATIVE_URL', '/wwwlibs/ext');
+define('HSLAYERS_RELATIVE_URL', '/wwwlibs/hslayers-trunk');
+define('OPENLAYERS_RELATIVE_URL', '/wwwlibs/hslayers-trunk');
+define('HSLAYERS_IMG_RELATIVE_URL', '/wwwlibs/hslayers-trunk/img/');
+define('PROJ4JS_RELATIVE_URL', '/wwwlibs/proj4js');
+define('PROXY_URL', '/cgi-bin/hsproxy.cgi?toEncoding=utf-8&url=');
+define("HSLAYERS_STATUSMANAGER_URL","/statusmanager/index.php");
+
+?>

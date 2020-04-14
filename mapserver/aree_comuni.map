@@ -1,0 +1,511 @@
+MAP
+  EXTENT 612484.75 5059559.5 751581.4375 5157309
+  IMAGETYPE "png"
+  NAME "lifeten"
+  SIZE 600 600
+  STATUS ON
+  UNITS METERS
+
+  OUTPUTFORMAT
+    NAME "png"
+    MIMETYPE "image/png"
+    DRIVER "AGG/PNG"
+    EXTENSION "png"
+    IMAGEMODE RGBA
+    TRANSPARENT TRUE
+  END # outputformat
+
+  PROJECTION
+    "proj=utm"
+    "zone=32"
+    "ellps=GRS80"
+    "towgs84=0,0,0,0,0,0,0"
+    "units=m"
+    "no_defs"
+  END # projection
+
+  LEGEND
+    KEYSIZE 20 10
+    KEYSPACING 5 5
+    LABEL
+      SIZE MEDIUM
+      OFFSET 0 0
+      SHADOWSIZE 1 1
+      TYPE BITMAP
+    END # LABEL
+    STATUS OFF
+  END # legend
+
+  QUERYMAP
+    SIZE -1 -1
+    STATUS OFF
+    STYLE HILITE
+  END # querymap
+
+  SCALEBAR
+    INTERVALS 4
+    LABEL
+      SIZE MEDIUM
+      OFFSET 0 0
+      SHADOWSIZE 1 1
+      TYPE BITMAP
+    END # LABEL
+    SIZE 200 3
+    STATUS OFF
+    UNITS MILES
+  END # scalebar
+
+  WEB
+    FOOTER ""
+    HEADER ""
+    TEMPPATH ""
+    METADATA
+      "ows_country"		"Italy"
+      "ows_onlineresource"	"http://217.199.4.93/cgi-bin/lifeten"
+      "ows_contactelectronicmailaddress" "aaron.iemma@muse.it"
+      "ows_city"		"Trento"
+      "ows_contactperson"	"Aaron Iemma"
+      "ows_contactorganization" "MUSE - Museo delle Scienze, Sez. Zoologia dei Vertebrati"
+      "ows_contactvoicetelephone" "0461270340"
+      "ows_enable_request"	"*"
+      "ows_srs"			"EPSG:4326 EPSG:25832 EPSG:3857"
+      "ows_title"		"lifeten"
+    END # METADATA
+  END # web
+
+### Confini provinciali
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA 'geom FROM provincia USING UNIQUE gid USING UNIQUE 25832'
+    EXTENT 612484.75 5059560 728617.3125 5157084.5
+    DUMP TRUE
+    METADATA
+      "ows_title"	"Provincia"
+      "ows_featureid"	"gid"
+    END # METADATA
+    NAME "Provincia"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 255 255 255
+        WIDTH 2
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # confini provinciali
+
+### Comunità di Valle
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA 'geom FROM comunita_valle USING UNIQUE gid USING UNIQUE 25832'
+    EXTENT 612484.75 5059560 728617.3125 5157084.5
+    DUMP TRUE
+    METADATA
+      "ows_title"	"Comunita_valle"
+      "ows_featureid"	"gid"
+    END # METADATA
+    NAME "Comunita_valle"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    LABELITEM "desc_"
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 0 0 0
+        WIDTH 0.4
+        PATTERN 10.0 5.0 END
+      END # STYLE
+      LABEL
+	COLOR  0 0 0
+	SIZE medium
+	TYPE truetype
+	MAXSCALEDENOM 300000
+	MINSCALEDENOM 500000
+      END
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # comunità di valle
+
+### Comuni
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA 'geom FROM comuni USING UNIQUE id'
+    EXTENT 612484.75 5059560 728617.3125 5157084.5
+    METADATA
+      "ows_title"	"Comuni"
+      "ows_featureid"	"id"
+    END # METADATA
+    NAME "Comuni"
+    DUMP TRUE
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    LABELITEM "nome"
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 0 0 0
+        WIDTH 0.3
+        PATTERN 5.0 5.0 1.0 5.0 END
+      END # STYLE
+      LABEL
+	COLOR  0 0 0
+	SIZE medium
+	TYPE truetype
+	MINSCALEDENOM 300000
+	MAXSCALEDENOM 50000
+      END
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # comuni
+
+### Aree protette, TUTTE
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA 'geom FROM aree_protette USING UNIQUE id USING UNIQUE 25832'
+    EXTENT 614289.625 5059559.5 751581.4375 5157309
+    METADATA
+      "ows_title"	"Aree_protette"
+      "ows_featureid"	"id"
+    END # METADATA
+    NAME "Aree_protette"
+    DUMP TRUE
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    CLASS
+      NAME "Single symbol	"
+      STYLE
+        OUTLINECOLOR 0 128 0
+        COLOR 164 198 57
+        WIDTH 0.3
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # aree protette
+
+### Parchi
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA "geom FROM (select * from aree_protette WHERE tipo = 'Parco Nazionale' or tipo = 'Parco Naturale') as subquery USING UNIQUE id USING UNIQUE 25832"
+    EXTENT 614289.625 5059559.5 751581.4375 5157309
+    METADATA
+      "ows_title"	"Parchi"
+      "ows_featureid"	"id"
+    END # METADATA
+    NAME "Parchi"
+    DUMP TRUE
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 0 128 0
+        COLOR 164 198 57
+        WIDTH 0.3
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # parchi
+
+### Aree protette, Parchi fluviali
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA "geom FROM (select * from aree_protette WHERE tipo = 'Parco fluviale') as subquery USING UNIQUE id USING UNIQUE 25832"
+    EXTENT 614289.625 5059559.5 751581.4375 5157309
+    METADATA
+      "ows_title"	"Parchi_fluviali"
+      "ows_featureid"	"id"
+    END # METADATA
+    NAME "Parchi_fluviali"
+    DUMP TRUE
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        COLOR 137 207 240
+        OUTLINECOLOR 33 171 205
+        WIDTH 0.26
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # aree protette, parchi fluviali
+
+### Aree protette, Dolomiti UNESCO
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA "geom FROM (select * from aree_protette WHERE tipo = 'Dolomiti UNESCO') as subquery USING UNIQUE id USING UNIQUE 25832"
+    EXTENT 614289.625 5059559.5 751581.4375 5157309
+    METADATA
+      "ows_title"	"Dolomiti_UNESCO"
+      "ows_featureid"	"id"
+    END # METADATA
+    NAME "Dolomiti_UNESCO"
+    DUMP TRUE
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 121 68 59
+        COLOR 204 85 0
+        WIDTH 0.26
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # aree protette, dolomiti unesco
+
+### Aree protette, Rete Natura2000
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA "geom FROM (select * from aree_protette WHERE tipo != 'Dolomiti UNESCO' AND tipo != 'Parco fluviale' AND tipo != 'Parco Nazionale' AND tipo != 'Parco Naturale') as subquery USING UNIQUE id USING UNIQUE 25832"
+    EXTENT 614289.625 5059559.5 751581.4375 5157309
+    METADATA
+      "ows_title"	"Rete_NATURA_2000"
+      "ows_featureid"	"id"
+    END # METADATA
+    NAME "Rete_NATURA_2000"
+    DUMP TRUE
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 1 50 32
+        COLOR 0 105 62
+        WIDTH 0.26
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # aree protette, rete natura2000
+
+### Reti di riserve
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA 'wkb_geometry FROM reti_riserve USING UNIQUE gid USING UNIQUE 25832'
+    EXTENT 612484.75 5059560 728617.3125 5157084.5
+    DUMP TRUE
+    METADATA
+      "ows_title"	"Riserve"
+      "ows_featureid"	"gid"
+    END # METADATA
+    NAME "Riserve"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 8 120 48
+        WIDTH 0.26
+        COLOR 34 139 34 
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # reti di riserve
+
+### Gateways - LINE
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA 'wkb_geometry FROM gateways USING UNIQUE gateway_pk'
+    EXTENT 612484.75 5059560 728617.3125 5157084.5
+    DUMP TRUE
+    GROUP Gateways
+    METADATA
+      "ows_title"	"Gateways_line"
+      "ows_featureid"	"gateway_pk"
+    END # METADATA
+    NAME "Gateways_line"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE LINE
+    UNITS METERS
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 255 0 0
+        WIDTH 0.26
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # gateways - line
+
+### Gateways - POLYGON
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA 'wkb_geometry FROM gateways USING UNIQUE gateway_pk'
+    EXTENT 612484.75 5059560 728617.3125 5157084.5
+    DUMP TRUE
+    GROUP Gateways
+    METADATA
+      "ows_title"	"Gateways_polygon"
+      "ows_featureid"	"gateway_pk"
+    END # METADATA
+    NAME "Gateways_polygon"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 255 0 0
+        WIDTH 0.26
+        COLOR 255 0 0
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # gateways - polygon
+
+### ATO
+  LAYER
+    CONNECTION "dbname='lifeten' host=localhost port=5432 user='lifeten' password='Life102013' sslmode=disable"
+    CONNECTIONTYPE POSTGIS
+    DATA 'wkb_geometry FROM ato USING UNIQUE gid'
+    EXTENT 612484.75 5059560 728617.3125 5157084.5
+    DUMP TRUE
+    METADATA
+      "ows_title"	"ATO"
+      "ows_featureid"	"gid"
+    END # METADATA
+    NAME "ATO"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "ellps=GRS80"
+      "towgs84=0,0,0,0,0,0,0"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TILEITEM "location"
+    TYPE POLYGON
+    UNITS METERS
+    CLASS
+      NAME "Single symbol"
+      STYLE
+        OUTLINECOLOR 8 120 48
+        WIDTH 0.26
+        COLOR 34 139 34 
+      END # STYLE
+    END # CLASS
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+  END # ato
+END # MAP

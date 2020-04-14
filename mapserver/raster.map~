@@ -1,0 +1,1497 @@
+MAP
+  EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+  IMAGETYPE "png"
+  NAME "raster"
+  SIZE 600 600
+  STATUS ON
+  UNITS METERS
+  SHAPEPATH './raster/'
+
+  OUTPUTFORMAT
+    NAME "png"
+    MIMETYPE "image/png"
+    DRIVER "AGG/PNG"
+    EXTENSION "png"
+    IMAGEMODE RGBA
+    TRANSPARENT TRUE
+  END # OUTPUTFORMAT
+
+  PROJECTION
+    "proj=utm"
+    "zone=32"
+    "datum=WGS84"
+    "units=m"
+    "no_defs"
+  END # PROJECTION
+  LEGEND
+    KEYSIZE 20 10
+    KEYSPACING 5 5
+    LABEL
+      SIZE MEDIUM
+      OFFSET 0 0
+      SHADOWSIZE 1 1
+      TYPE BITMAP
+    END # LABEL
+    STATUS OFF
+  END # LEGEND
+
+  QUERYMAP
+    SIZE -1 -1
+    STATUS OFF
+    STYLE HILITE
+  END # QUERYMAP
+
+  SCALEBAR
+    INTERVALS 4
+    LABEL
+      SIZE MEDIUM
+      OFFSET 0 0
+      SHADOWSIZE 1 1
+      TYPE BITMAP
+    END # LABEL
+    SIZE 200 3
+    STATUS OFF
+    UNITS MILES
+  END # SCALEBAR
+
+  WEB
+    FOOTER ""
+    HEADER ""
+    TEMPPATH ""
+    METADATA
+      "ows_onlineresource"	"http://217.199.4.93/cgi-bin/lifeten_raster"
+      "ows_enable_request"	"*"
+      "ows_srs"	"EPSG:900913 EPSG:32632 EPSG:4326 EPSG:3857"
+      "ows_title"	"lifeten raster"
+    END # METADATA
+    TEMPLATE "[templatepath]"
+  END # WEB
+
+  LAYER
+    DATA "accgen.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"accgen"
+    END # METADATA
+    NAME "accgen"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "acrsci.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"acrsci"
+    END # METADATA
+    NAME "acrsci"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "aegfun.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"aegfun"
+    END # METADATA
+    NAME "aegfun"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "alegra.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"alegra"
+    END # METADATA
+    NAME "alegra"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "anapla.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"anapla"
+    END # METADATA
+    NAME "anapla"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "aquchr.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"aquchr"
+    END # METADATA
+    NAME "aquchr"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "ardcin.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"ardcin"
+    END # METADATA
+    NAME "ardcin"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "aytful.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"aytful"
+    END # METADATA
+    NAME "aytful"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "bomvar.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"bomvar"
+    END # METADATA
+    NAME "bomvar"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "bonbon.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"bonbon"
+    END # METADATA
+    NAME "bonbon"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "bubbub.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"bubbub"
+    END # METADATA
+    NAME "bubbub"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "bufbuf.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"bufbuf"
+    END # METADATA
+    NAME "bufbuf"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "butbut.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"butbut"
+    END # METADATA
+    NAME "butbut"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "capeur.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"capeur"
+    END # METADATA
+    NAME "capeur"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "carcan.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"carcan"
+    END # METADATA
+    NAME "carcan"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "cerbra.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"cerbra"
+    END # METADATA
+    NAME "cerbra"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "cerfam.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"cerfam"
+    END # METADATA
+    NAME "cerfam"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "cetcet.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"cetcet"
+    END # METADATA
+    NAME "cetcet"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "cincin.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"cincin"
+    END # METADATA
+    NAME "cincin"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "cotcot.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"cotcot"
+    END # METADATA
+    NAME "cotcot"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "crecre.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"crecre"
+    END # METADATA
+    NAME "crecre"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "denmaj.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"denmaj"
+    END # METADATA
+    NAME "denmaj"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "drymar.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"drymar"
+    END # METADATA
+    NAME "drymar"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "embcit.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"embcit"
+    END # METADATA
+    NAME "embcit"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "falper.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"falper"
+    END # METADATA
+    NAME "falper"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "faltin.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"faltin"
+    END # METADATA
+    NAME "faltin"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "fulatr.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"fulatr"
+    END # METADATA
+    NAME "fulatr"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "galchl.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"galchl"
+    END # METADATA
+    NAME "galchl"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "glapas.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"glapas"
+    END # METADATA
+    NAME "glapas"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "gypbar.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"gypbar"
+    END # METADATA
+    NAME "gypbar"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "jyntor.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"jyntor"
+    END # METADATA
+    NAME "jyntor"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "lagmut.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"lagmut"
+    END # METADATA
+    NAME "lagmut"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "lancol.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"lancol"
+    END # METADATA
+    NAME "lancol"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "marmar.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"marmar"
+    END # METADATA
+    NAME "marmar"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "milmig.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"milmig"
+    END # METADATA
+    NAME "milmig"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "monniv.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"monniv"
+    END # METADATA
+    NAME "monniv"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "oenoen.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"oenoen"
+    END # METADATA
+    NAME "oenoen"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "otusco.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"otusco"
+    END # METADATA
+    NAME "otusco"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "parcae.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"parcae"
+    END # METADATA
+    NAME "parcae"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "parcri.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"parcri"
+    END # METADATA
+    NAME "parcri"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "parmon.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"parmon"
+    END # METADATA
+    NAME "parmon"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "perapi.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"perapi"
+    END # METADATA
+    NAME "perapi"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "phopho.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"phopho"
+    END # METADATA
+    NAME "phopho"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "piccan.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"piccan"
+    END # METADATA
+    NAME "piccan"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "picvir.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"picvir"
+    END # METADATA
+    NAME "picvir"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "podcri.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"podcri"
+    END # METADATA
+    NAME "podcri"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "prucol.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"prucol"
+    END # METADATA
+    NAME "prucol"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "ralaqu.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"ralaqu"
+    END # METADATA
+    NAME "ralaqu"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "salsal.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"salsal"
+    END # METADATA
+    NAME "salsal"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "saxrub.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"saxrub"
+    END # METADATA
+    NAME "saxrub"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "siteur.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"siteur"
+    END # METADATA
+    NAME "siteur"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "tacruf.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"tacruf"
+    END # METADATA
+    NAME "tacruf"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "tettet.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"tettet"
+    END # METADATA
+    NAME "tettet"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "teturo.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"teturo"
+    END # METADATA
+    NAME "teturo"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "turtor.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"turtor"
+    END # METADATA
+    NAME "turtor"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "upuepo.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"upuepo"
+    END # METADATA
+    NAME "upuepo"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "ursarc.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"ursarc"
+    END # METADATA
+    NAME "ursarc"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "zooviv.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"zooviv"
+    END # METADATA
+    NAME "zooviv"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "alta_quota_sp_focali.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"alta_quota_sp_focali"
+    END # METADATA
+    NAME "alta_quota_sp_focali"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    #PROCESSING   "BANDS=1"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 0 0 0
+  END # LAYER
+
+  LAYER
+    DATA "conifere_sp_focali.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"conifere_sp_focali"
+    END # METADATA
+    NAME "conifere_sp_focali"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    #PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "ambienti_aperti_sp_focali.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"ambienti_aperti_sp_focali"
+    END # METADATA
+    NAME "ambienti_aperti_sp_focali"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    #PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "latifoglie_sp_focali.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"latifoglie_sp_focali"
+    END # METADATA
+    NAME "latifoglie_sp_focali"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    #PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "aree_umide_sp_focali.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"aree_umide_sp_focali"
+    END # METADATA
+    NAME "aree_umide_sp_focali"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    #PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "boschi_perifluviali_new.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"boschi_perifluviali_sp_focali"
+    END # METADATA
+    NAME "boschi_perifluviali_sp_focali"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    #PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "rocce.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"rocce_sp_focali"
+    END # METADATA
+    NAME "rocce_sp_focali"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    #PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "colture_arboree_sp_focali_new.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"colture_arboree_sp_focali"
+    END # METADATA
+    NAME "colture_arboree_sp_focali"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    #PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "ricchezza.4.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"ricchezza"
+    END # METADATA
+    NAME "ricchezza"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    #PROCESSING   "BANDS=1,2,3"
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 255 255 255
+  END # LAYER
+
+  LAYER
+    DATA "hotspots.tif"
+    EXTENT 612380.41947555 5059480.31466912 728722.39900065 5157216.45726228
+    METADATA
+      "ows_title"	"hotspots"
+    END # METADATA
+    NAME "hotspots"
+    PROJECTION
+      "proj=utm"
+      "zone=32"
+      "datum=WGS84"
+      "units=m"
+      "no_defs"
+    END # PROJECTION
+    STATUS ON
+    TYPE RASTER
+    UNITS METERS
+    OFFSITE 0 0 0
+  END # LAYER
+
+END # MAP

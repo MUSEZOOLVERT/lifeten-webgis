@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/wwwlibs/ext/3.3.1-hsrs/resources/css/ext-all.css" />
+    <script type="text/javascript" src="/wwwlibs/ext/3.3.1-hsrs/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="/wwwlibs/ext/3.3.1-hsrs/ext-all.js"></script>
+
+    <script type="text/javascript" src="../build/OpenLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers/Util.js"></script>
+    <script type="text/javascript" src="../source/HSLayers/Control/Query.js"></script>
+    <script type="text/javascript" src="/wwwlibs/proj4js/proj4js.js"></script>
+
+    <title>Testing HSLayers.Control.Query</title>
+    <script type="text/javascript">
+
+    var map;
+    var test;
+
+    function test_case(t) {
+
+        OpenLayers.ProxyHost = "/cgi-bin/olproxy.cgi?url=";
+
+        test = t;
+        t.plan(1);
+
+        map = new OpenLayers.Map("map", HSLayers.Util.getProjectionOptions("epsg:102067",1000000,500));
+
+        var wmsLayer = new OpenLayers.Layer.WMS("Lesy",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'les'},
+                    {
+                        attribution: "Never use this data &copy;",
+                        legend: "http://foo/bar.jpg"
+                    }
+                );
+
+        map.addLayer(wmsLayer);
+        map.zoomToMaxExtent();
+
+        var query = new HSLayers.Control.Query();
+        map.addControl(query);
+        query.activate();
+
+        var lonlatwgs = new OpenLayers.LonLat(15,50);
+        var lonlat = new OpenLayers.LonLat(15,50);
+        lonlat.transform(new OpenLayers.Projection("epsg:4326"),map.projection);
+        var px = map.baseLayer.getViewPortPxFromLonLat(lonlat);
+        var data = query.makeCoordsData(px);
+
+        t.eq(data.length, 2);
+        t.eq(data[1][0], "GPS");
+        t.eq(data[0][0], map.projection.proj.title + " ["+OpenLayers.i18n(this.map.projection.proj.units)+"]");
+
+        t.eq(data[0][1], Math.round(lonlat.lon));
+        t.eq(data[0][2], Math.round(lonlat.lat));
+
+        t.eq(data[1][2], OpenLayers.Util.getFormattedLonLat(lonlatwgs.lon,"lon","dms"));
+        t.eq(data[1][1], OpenLayers.Util.getFormattedLonLat(lonlatwgs.lat,"lat","dms"));
+
+        var evt = new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat);
+        var data = query.makeCoordsData(evt);
+        t.eq(data[0][1], Math.round(lonlat.lon));
+        t.eq(data[0][2], Math.round(lonlat.lat));
+
+        t.eq(data[1][2], OpenLayers.Util.getFormattedLonLat(lonlatwgs.lon,"lon","dms"));
+        t.eq(data[1][1], OpenLayers.Util.getFormattedLonLat(lonlatwgs.lat,"lat","dms"));
+
+    };
+
+
+  </script>
+</head>
+<body>
+    <div id="map" style="width: 1024px; height: 1024px;"></div>
+</body>
+</html>

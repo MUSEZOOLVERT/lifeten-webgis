@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../build/OpenLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers/Util.js"></script>
+    <script type="text/javascript" src="../source/HSLayers/Format/PrinterContext.js"></script>
+    <script type="text/javascript" src="/wwwlibs/proj4js/proj4js.js"></script>
+
+    <title>Testing HSLayers.Format.PrinterContext</title>
+    <script type="text/javascript">
+
+    var map;
+    var test;
+
+    function test_case(t) {
+
+        OpenLayers.ProxyHost = "/cgi-bin/olproxy.cgi?url=";
+
+        test = t;
+        t.plan(9);
+
+        map = new OpenLayers.Map("map", HSLayers.Util.getProjectionOptions("epsg:102067",1000000,500));
+
+        var wmsLayer = new OpenLayers.Layer.WMS("Lesy",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'les'},
+                    {
+                        attribution: "Never use this data &copy;",
+                        legend: "http://foo/bar.jpg"
+                    }
+                );
+
+        var wmsLayer2 = new OpenLayers.Layer.WMS("Lesy 2",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'dem_color'},
+                    {
+                        isBaseLayer: false,
+                        visibility: true,
+                        attribution: {
+                            href: "http://foo/bar",
+                            title: "Foo bar",
+                            logo: {
+                                format: "image/gif",
+                                height: 42,
+                                width: 110,
+                                href: "http://www.kraj-lbc.cz/_templates/kraj/images/logo.gif"
+                            }
+                        },
+
+                        legend:  {
+                                format: "image/gif",
+                                height:15,
+                                width: 25,
+                                href: "http://bnhelp.netart.cz/cgi-bin/crtopo?mode=legend&layer=dem_color"
+                        }
+                    }
+                );
+        map.addLayer(wmsLayer);
+        map.addLayer(wmsLayer2);
+        map.zoomToMaxExtent();
+        map.zoomTo(4);
+        var bounds = this.map.maxExtent;
+
+        var format = new HSLayers.Format.PrinterContext();
+        t.ok(format instanceof HSLayers.Format.PrinterContext);
+
+        format.setBounds(bounds);
+        t.ok(format.bounds == bounds);
+
+        var lyrContext = format.layerGridToContext(wmsLayer);
+        t.eq(lyrContext.name, wmsLayer.name);
+        t.eq(lyrContext.attribution, wmsLayer.attribution);
+        t.eq(lyrContext.legend, wmsLayer.legend);
+        t.eq(lyrContext.grid.length, 8);
+
+        var lyrContext2 = format.layerGridToContext(wmsLayer2);
+        t.eq(lyrContext2.attribution.href, wmsLayer2.attribution.href);
+        t.eq(lyrContext2.legend.format, wmsLayer2.legend.format);
+
+
+        var out = format.write(map,"a4",true);
+
+        t.ok(typeof (out) == 'string');
+
+        var json = new OpenLayers.Format.JSON();
+        var context = json.read(out);
+
+    };
+
+
+  </script>
+</head>
+<body>
+    <div id="map" style="width: 1024px; height: 1024px;"></div>
+</body>
+</html>

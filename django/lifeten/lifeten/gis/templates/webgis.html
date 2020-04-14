@@ -1,0 +1,1612 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+    <script>
+        // Fetch DJANGO user's variables
+        user_insti = {{ user.get_profile.institution_id|default:"null" }};
+        user_area = {{ user.get_profile.area_id|default:"null" }};
+    </script>
+
+    <script type="text/javascript" src="{{ STATIC_URL }}ol_2.12/OpenLayers.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}tablesorter/jquery.tablesorter.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}style.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}functions.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}tablesorter/themes/blue/style.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}CSS/base.css" /> 
+    <link rel="stylesheet" href="{{ STATIC_URL }}CSS/webgis.css" /> 
+
+    <style>
+        
+        .rectangle-legend {
+            width: 1em;
+            height: 1em;
+            border: 1px solid white;
+            float: left;
+
+        }
+
+        .dropdown {
+            max-width: 20em;
+            min-width: 15em;
+            width: 15em;
+            right-margin: auto;
+        }
+
+          img.inline {
+              width: 1em;
+              vertical-align:middle;
+          }    
+
+        .showmaps {
+            background-image: url("{{ STATIC_URL }}icons/select.png") !important;
+             width: 20px;
+             height: 20px; 
+        }
+    
+        .hidemaps {
+            background-image: url("{{ STATIC_URL }}icons/unselect.png") !important;
+            width: 20px;
+            height: 20px; 
+
+        }
+    
+        .removemaps {
+            background-image: url("{{ STATIC_URL }}icons/remove.png") !important;
+            width: 20px;
+            height: 20px; 
+        }
+
+        .ui-dialog {
+            z-index: 5000;
+        }
+
+        #output-id {
+        margin: 10px 250px;
+        }
+
+        .olControlAttribution {
+            left: 10px;
+            top: 10px;
+            opacity: 1;
+        }
+
+        .olControlMousePosition {
+            bottom: 4em;
+        }
+
+
+        .olControlNavigationToolbar {
+            display: block;
+            height: 18px;
+            width: 20px;
+            left: 1em;
+            top: 1em;
+        }        
+
+        .olControlDeleteShapeItemInactive {  
+            background-image: url("{{ STATIC_URL }}icons/polygon_remove.png") !important;
+        }
+
+        .olControlZoomToMaxExtentItemInactive {
+            background-image: url("{{ STATIC_URL }}icons/zoomto.png") !important;
+        }
+
+
+    </style>
+<!---------------------->
+<!-- BEGIN MAP SCRIPTS-->
+<!---------------------->
+    <script type="text/javascript">
+
+
+        var map, 
+        //Lists
+        availableSpecie, 
+        availableGenere, 
+        infoSpecie = {}, 
+        instiSpecie = {},
+        // Styles
+        style_comuni, 
+        style_aree, 
+        selectControl, 
+        user_insti, 
+        nLayers;
+
+        function escapeRegExp(string) {
+            return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        }
+
+        function replaceAll(string, find, replace) {
+          return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+        }
+
+        function insertSpeciesMaps( event, spec ) {
+            var itemVal;
+
+            if ( spec.name == ui ) {
+                itemVal = itemVal;
+            } else itemVal = spec.value;
+
+            polyurl = "/returnpolygonfromspecie/" + itemVal
+            var styleColor = color();
+            // Species distribution
+            $.getJSON("/returninfofromspecie/" + itemVal, function(data){
+                infoSpecie[itemVal] = data;
+                addLayerFrom(itemVal, polyurl, data[0].fields.sensitivity, styleColor);
+            });
+            // Species' suitability models
+            $.getJSON("/returnwms/" + itemVal, function(data){
+                if (data[0].fields.raster == 1 && user_insti == 5){
+                    addLayerRaster(itemVal, data[0].pk);
+                }
+            });
+            // Returns institutions which sampled a specie         
+            $.getJSON("/returninstifromspecie/" + itemVal, function(data){
+                instiSpecie[itemVal] = data;
+            });
+            // KML file generation
+            if (user_insti && ! user_area) {
+                layerurl = "/returnkmlfromspecie/" + itemVal + "/" + user_insti
+                addLayerFrom(itemVal, layerurl, false, styleColor);
+            } 
+            else if (user_insti && user_area) {
+                layerurl = "/returnkmlfromspecie/" + itemVal + "/" + user_insti + "/" + user_area
+                addLayerFrom(itemVal, layerurl, false, styleColor);
+            }
+            
+            $('input#tagspecie').val('');
+            return false;
+        }
+
+        var externalQueryByURL = window.location.search;
+        var requiredSpecie = externalQueryByURL.split('=')[1];
+
+        ///////////////
+        //BEGIN POPULATIONS OF DROPDOWN MENUS AND GENERAL LISTS
+        ///////////////
+
+        $.getJSON('/returnlistaree/', function(data){
+            for(var j = 0; j < data.length; j++){
+                if ( (data[j].fields.tipo).indexOf("SIC")!=-1 )
+                {
+                    $('#SIC').append($("<option></option>").text(data[j].fields.nome).val(data[j].pk));
+                }
+            }
+        });
+
+        $.getJSON('/returnlistato/', function(data){
+            for(var j = 0; j < data.length; j++){
+                    //$('#ATO_FILTER').append($("<option></option>").text(data[j].fields.nome).val(data[j].pk));
+            }
+        });
+        $.getJSON('/returnlistcomunita/', function(data){
+            for(var j = 0; j < data.length; j++){
+                    //$('#COMUNITA_FILTER').append($("<option></option>").text(data[j].fields.nome).val(data[j].pk));
+            }
+        });
+
+        $.getJSON('/returnlistaree/', function(data){
+            for(var j = 0; j < data.length; j++){    
+                if ( (data[j].fields.tipo).indexOf("ZPS")!=-1 )
+                {
+                    $('#ZPS').append($("<option></option>").text(data[j].fields.nome).val(data[j].pk));
+                    //$('#ZPS_FILTER').append($("<option></option>").text(data[j].fields.nome).val(data[j].pk));
+                }
+            }
+        });
+
+        $.getJSON('/returnlistaree/', function(data){
+            for(var j = 0; j < data.length; j++){                
+                if ( (data[j].fields.tipo).indexOf("Biotopo")!=-1 )
+                {
+                    $('#BIOTOPO').append($("<option></option>").text(data[j].fields.nome).val(data[j].pk));                
+                }
+            }
+        });
+
+        $.getJSON('/returnlistcomuni/', function(data){
+            for(var j = 0; j < data.length; j++){                
+                    $('#COMUNE').append($("<option></option>").text(data[j].fields.nome).val(data[j].pk));                
+                    //$('#COMUNE_FILTER').append($("<option></option>").text(data[j].fields.nome).val(data[j].pk));
+            }
+        });
+
+        // inizializza select classe
+        $.getJSON('/returnclass/', function(data){
+            var length = data.length;
+            for(var j = 0; j < length; j++){
+                var newOption = $("<option></option>").text(data[j].fields.class_field).val(data[j].fields.class_field);
+                $('#class').append(newOption);
+            }
+        });        
+
+        // Species list
+        availableSpecie = new Array();
+        $.getJSON('/returnlistspecie/', function(data){
+            var length = data.length;
+            for(var j = 0; j < length; j++){
+                availableSpecie.push(data[j].fields.scientificname);
+                if (data[j].fields.vernacularname != null){
+                    availableSpecie.push(data[j].fields.vernacularname);
+                }
+            }
+            
+            // Ricerca della specie da URL
+            // Se nessuna specie è inserita nella URL...
+            if(typeof requiredSpecie === 'undefined') {
+            }
+            else
+            {
+                console.log('FOUND1');
+                requiredSpecie = requiredSpecie.replaceAll('%20',' ');
+
+                if( ($.inArray(requiredSpecie,availableSpecie))==-1 ) {
+                    console.log('FOUND2');
+                }
+                else 
+
+
+                    polyurl = "/returnpolygonfromspecie/" + requiredSpecie
+                    var styleColor = color();
+                    // Species distribution
+                    $.getJSON("/returninfofromspecie/" + requiredSpecie, function(data){
+                        infoSpecie[requiredSpecie] = data;
+                        addLayerFrom(requiredSpecie, polyurl, data[0].fields.sensitivity, styleColor);
+                    });
+                    // Species' suitability models
+                    $.getJSON("/returnwms/" + requiredSpecie, function(data){
+                        if (data[0].fields.raster == 1 && user_insti == 5){
+                            addLayerRaster(requiredSpecie, data[0].pk);
+                        }
+                    });
+                    // Returns institutions which sampled a specie         
+                    $.getJSON("/returninstifromspecie/" + requiredSpecie, function(data){
+                        instiSpecie[requiredSpecie] = data;
+                    });
+                    // KML file generation
+                    if (user_insti && ! user_area) {
+                        layerurl = "/returnkmlfromspecie/" + requiredSpecie + "/" + user_insti
+                        addLayerFrom(requiredSpecie, layerurl, false, styleColor);
+                    } 
+                    else if (user_insti && user_area) {
+                        layerurl = "/returnkmlfromspecie/" + requiredSpecie + "/" + user_insti + "/" + user_area
+                        addLayerFrom(requiredSpecie, layerurl, false, styleColor);
+                    }
+                        $('input#tagspecie').val('');
+                    return false;
+                
+            }
+
+        });
+            
+        ///////////////
+        //END POPULATIONS OF DROPDOWN MENUS AND GENERAL LISTS
+        ///////////////
+
+
+
+
+            
+
+     
+
+
+        ///////////////
+        //BEGIN CONTAINER FOR ALL GEOGRAPHICAL ITEMS (gets fired when HTML web page is loaded)
+        ///////////////
+
+        function init() //BEGINFUNCTION INIT 
+        {
+            OpenLayers.Lang.setCode("it");
+
+        
+            // Page dimensions
+            var pagesize = getPageSize();
+            $('#map').css('height', pagesize[3]-110);
+            $('#infofeat').dialog({
+                autoOpen: false,
+                modal: true,
+                resizable: true,
+                draggable: true,
+                width: 1250,
+                height: 400,
+                //minWidth: 800,
+                close: function(ev, ui) { selectControl.unselectAll(); }
+            });
+            
+            $('#infofeat').closest('div.ui-dialog').css('z-index', '1000000');
+            
+            /* init tabs, when dialog is opened */     
+            $('#infofeat').bind('dialogopen', function(){
+                $('#datatabs').tabs();
+            });
+            
+            $("#infofeat").bind('dialogclose', function(){
+                $("#datatabs").tabs('destroy'); 
+            });
+
+            // Accordion
+            $( "#accordion" ).accordion({collapsible: true, active: false, heightStyle: 'content'});
+            $("#accordion").find('h3').filter(':contains(Esporta)').hide();
+            $("#accordion").find('h3').filter(':contains(Mappe progetto)').hide();
+            $("#layerswitcher").accordion({
+                collapsible: true, 
+                active: false, 
+                heightStyle: 'content'
+            });
+
+            // Progress "bar"
+            $("#progDialog").dialog({
+                height: 100,
+                width:500,
+                modal: true,
+                autoOpen: false
+            });
+            $('#progDialog').closest('div.ui-dialog').css('z-index', '1000000')
+            $("#progBar").progressbar({value:false});
+
+
+            setButton(".vis_button");
+
+
+            ///////////////
+            //BEGIN KEY FUNCTIONS FOR MAP ADDING
+            ///////////////
+
+            // Species' autocomplete form
+            $( "#tagspecie" ).autocomplete({
+                source: availableSpecie,
+                // Carica tutti i layer relativi ad una specie quando la si seleziona dall'autocomplete. Le restrizioni di visualizzazione sono gestite da   // Django, all'interno delle view relative alle varie URL
+                select: function( event, ui ) {
+                    polyurl = "/returnpolygonfromspecie/" + ui.item.value
+                    var styleColor = color();
+                    // Species distribution
+                    $.getJSON("/returninfofromspecie/" + ui.item.value, function(data){
+                        infoSpecie[ui.item.value] = data;
+                        addLayerFrom(ui.item.value, polyurl, data[0].fields.sensitivity, styleColor);
+                    });
+                    // Species' suitability models
+                    $.getJSON("/returnwms/" + ui.item.value, function(data){
+                        if (data[0].fields.raster == 1 && user_insti == 5){
+                            addLayerRaster(ui.item.value, data[0].pk);
+                        }
+                    });
+                    // Returns institutions which sampled a specie         
+                    $.getJSON("/returninstifromspecie/" + ui.item.value, function(data){
+                        instiSpecie[ui.item.value] = data;
+                    });
+                    // KML file generation
+                    if (user_insti && ! user_area) {
+                        layerurl = "/returnkmlfromspecie/" + ui.item.value + "/" + user_insti
+                        addLayerFrom(ui.item.value, layerurl, false, styleColor);
+                    } 
+                    else if (user_insti && user_area) {
+                        layerurl = "/returnkmlfromspecie/" + ui.item.value + "/" + user_insti + "/" + user_area
+                        addLayerFrom(ui.item.value, layerurl, false, styleColor);
+                    }
+                        $('input#tagspecie').val('');
+                    return false;
+                }
+            }); // End autocomplete form
+
+            ///////////////
+            //END KEY FUNCTIONS FOR MAP ADDING
+            ///////////////
+            map = new OpenLayers.Map("map",{
+                controls:[
+
+                    new OpenLayers.Control.Zoom(),
+                    //new OpenLayers.Control.SelectFeature(),
+                    new OpenLayers.Control.MousePosition(),
+                    //new OpenLayers.Control.PanZoomBar(),
+                    //new OpenLayers.Control.OverviewMap(),
+                    //new OpenLayers.Control.Attribution(),
+                    new OpenLayers.Control.Permalink(),
+                    new OpenLayers.Control.Scale(),
+
+                ],
+                maxExtent: new OpenLayers.Bounds(1158197.60,5724265.46,1337284.95,5868098.75),
+                restrictedExtent: new OpenLayers.Bounds(1158197.60,5724265.46,1337284.95,5868098.75),
+                maxResolution: 1565.0399,
+                units: "meters",
+                projection: new OpenLayers.Projection("EPSG:900913"),    // Google Projection
+                displayProjection: new OpenLayers.Projection("EPSG:4326"),
+                eventListeners: {
+                    
+                    },
+                });
+                ///////////////
+                // NEW CONTROLS
+                ///////////////
+
+                //MAP FOR DRAWING OPERATIONS
+                drawings = new OpenLayers.Layer.Vector();
+
+                //BEGINNAVIGATIONCONTROLS
+                controlZoomToMaxExtent =  new OpenLayers.Control.ZoomToMaxExtent({
+                	title:'Zooma alla massima estensione'
+                });
+                controlZoomBox =  new OpenLayers.Control.ZoomBox({
+                	alwaysZoom:true,
+                	title:'Zooma ad una zona circoscritta'
+                });
+                navigateControl = new OpenLayers.Control.Navigation({
+                	title:'Naviga nella mappa'
+                });
+                //ENDNAVIGATIONCONTROLS
+
+                //controlDrawFeaturePolygon = new OpenLayers.Control.DrawFeature(drawings,OpenLayers.Handler.Polygon,{
+                //    'displayClass': 'olControlDrawFeaturePolygon',
+                //    title: 'Crea un nuovo poligono',
+                //    eventListeners: {
+                //    }
+                //});
+                controlDeleteShape = new OpenLayers.Control.SelectFeature(drawings,{
+                    displayClass: "olControlDeleteShape",
+                    title: "Rimuove una geometria",
+                    eventListeners: {
+                        featurehighlighted: function confirm_deleting(event) {
+                            var feature = event.feature;
+                            if( confirm("Vuoi davvero eliminare la geometria?") ) {
+                                drawings.removeFeatures( [ feature ] );
+                            }
+                        }
+                    }   
+                });
+
+                //controlModifyShape = new OpenLayers.Control.ModifyFeature.RESHAPE(drawings);
+
+
+                //editingToolbar = new OpenLayers.Control.Panel({
+                //    displayClass: 'olControlEditingToolbar',
+                //    defaultControl: navigateControl
+                //});
+
+                navigationToolbar = new OpenLayers.Control.Panel({
+                    displayClass: 'olControlNavToolbar'
+                })
+
+                navigationToolbar.addControls([navigateControl,controlZoomBox,controlZoomToMaxExtent]);
+                //editingToolbar.addControls([controlDeleteShape,controlDrawFeaturePolygon]);
+                //map.addControl(editingToolbar);
+                map.addControl(navigationToolbar);
+                //map.addLayer(drawings);
+
+                //drawings.events.on({
+                //    featuresadded: function (event) {
+                //        var confirmPolygon = function () { return confirm("Confermi l'estensione del poligono?") };
+                //        if (!confirmPolygon()) {
+                //            polygonLayer.removeFeatures(event.features);
+                //        }
+                //    }
+                //});
+
+
+                
+                //BEGINMAPCONTROL GETFEATUREINFO 
+                getFeatureInfo = new OpenLayers.Control.WMSGetFeatureInfo({ 
+                    url: 'http://webgis.muse.it/geoserver/WEBGIS/wms', 
+                    title: 'Identify features by clicking', 
+                    queryVisible: true,
+                    hover: false,
+                    eventListeners: { 
+                        getfeatureinfo: function(event) { 
+                            map.addPopup(new OpenLayers.Popup.FramedCloud( 
+                                "getFeatureInfo Popup", 
+                                map.getLonLatFromPixel(event.xy), 
+                                null, 
+                                event.text, 
+                                null, 
+                                true 
+                            )); 
+                        } 
+                    } 
+                }); 
+                map.addControl(getFeatureInfo); 
+                getFeatureInfo.activate();  
+                //ENDMAPCONTROL GETFEATUREINFO 
+
+                //BEGINMAPCONTROL FEATURE SELECTION, HOVERING, ETC.
+                selectControl = new OpenLayers.Control.SelectFeature(
+                  [],
+                  {
+                    clickout: true, toggle: true,
+                    multiple: false, hover: false
+                  }
+                );
+                map.addControl(selectControl);
+                //ENDMAPCONTROL FEATURE SELECTION, HOVERING, ETC.
+                
+                function onFeatureUnselect(event) {
+                    var feature = event.feature;
+                        if(feature.popup) {
+                            map.removePopup(feature.popup);
+                            feature.popup.destroy();
+                            delete feature.popup;
+                        }
+                }
+
+                            map.events.on({
+                "featureunselected": onFeatureUnselect
+            });
+                ///////////////
+                // END NEW CONTROLS
+                ///////////////
+
+                OpenLayers.ProxyHost="http://webgis.muse.it/cgi-bin/proxy.cgi?url=";
+            
+
+                //     var layerswitch = new OpenLayers.Control.LayerSwitcher({'div':OpenLayers.Util.getElement('layerswitcher')});
+                //     map.addControl(layerswitch);
+                //     $("#layerswitcher").find(".baseLbl").text("Mappa di base");
+                //     $("#layerswitcher").find(".dataLbl").text("Mappe del Progetto LIFE+ T.E.N.");
+
+                // BASELAYER
+                var mapnik = new OpenLayers.Layer.OSM(
+                      "openstreetmap",
+                  "http://tile.openstreetmap.org/${z}/${x}/${y}.png",
+                  {isBaseLayer:true}
+                );
+
+
+                ///////////////
+                //BEGIN MAPS CONFIGURATION
+                ///////////////
+
+                    ////
+                    ////BEGIN BASEMAPS
+                    ////
+
+                        //
+                        //BEGIN CONFINI AMMINISTRATIVI
+                        //
+
+                            //BEGIN CONFINE PROVINCIALE
+                            var provincia = new OpenLayers.Layer.Vector("Confine amministrativo provinciale", {
+                                      protocol: new OpenLayers.Protocol.WFS({
+                                    url: "http://webgis.muse.it/cgi-bin/lifeten",
+                                    featureType: "Provincia",
+                                    srsName: "EPSG:4326",
+                                    version: "1.0.0"
+                                  }),
+                                  projection: map.displayProjection,
+                                  strategies:[new OpenLayers.Strategy.BBOX()],
+                                  visibility: true,
+                                  styleMap: style_provi
+                            });
+                            provincia.events.register('loadstart', this, onloadstart_poi);
+                            provincia.events.register('loadend', this, function(e){
+                                              $("#spinner_poi").hide();
+                                            });
+                            //END CONFINE PROVINCIALE
+
+                            //BEGIN COMUNITÀ DI VALLE
+                            var comunita = new OpenLayers.Layer.WMS(
+                                "Comunità di valle",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:comunita_valle',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            comunita.events.register('loadstart', this, onloadstart_poi);
+                            comunita.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+
+            //                var comunita = new OpenLayers.Layer.Vector("Comunità di valle", {
+            //                      protocol: new OpenLayers.Protocol.WFS({
+            //                        url: "http://webgis.muse.it/cgi-bin/lifeten",
+            //                        featureType: "Comunita_valle",
+            //                        srsName: "EPSG:4326",
+            //                        version: "1.0.0"
+            //                  }),
+            //                      projection: map.displayProjection,
+            //                      strategies:[new OpenLayers.Strategy.BBOX()],
+            //                      visibility: false,
+            //                      styleMap: style_valli
+            //                });
+            //                comunita.events.register('loadstart', this, onloadstart_poi);
+            //                comunita.events.register('loadend', this, function(e){
+            //                    $("#spinner_poi").hide();
+            //                });
+                            //END COMUNITÀ DI VALLE
+                    
+                            //BEGIN AMMINISTRAZIONI COMUNALI
+                            var comuni = new OpenLayers.Layer.WMS(
+                                "Amministrazioni comunali",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:comuni',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            comuni.events.register('loadstart', this, onloadstart_poi);
+                            comuni.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+
+
+                            //BEGIN ATO
+                            var ato = new OpenLayers.Layer.WMS(
+                                "Ambiti Territoriali Omogenei",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:ato',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            ato.events.register('loadstart', this, onloadstart_poi);
+                            ato.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            //END ATO
+
+                        //
+                        //END CONFINI AMMINISTRATIVI
+                        //
+
+                        //
+                        //BEGIN RISERVE NATURALI
+                        //
+
+                            //BEGIN Parchi
+                            var parchi_naturali = new OpenLayers.Layer.WMS(
+                                "Parchi naturali",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:view_parchi_naturali',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            parchi_naturali.events.register('loadstart', this, onloadstart_poi);
+                            parchi_naturali.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+
+
+                            //BEGIN DOLOMITI UNESCO
+                            var dolomiti_unesco = new OpenLayers.Layer.WMS(
+                                "Dolomiti UNESCO",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:view_dolomiti_unesco',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            dolomiti_unesco.events.register('loadstart', this, onloadstart_poi);
+                            dolomiti_unesco.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            //END DOLIMITI UNESCO
+
+                            //BEGIN SIC
+                            var sic = new OpenLayers.Layer.WMS(
+                                "SIC",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:view_sic',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            sic.events.register('loadstart', this, onloadstart_poi);
+                            sic.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            //END SIC
+
+                            //BEGIN ZPS
+                            var zps = new OpenLayers.Layer.WMS(
+                                "ZPS",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:view_zps',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            zps.events.register('loadstart', this, onloadstart_poi);
+                            zps.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            //END ZPS
+
+                            //BEGIN PARCHI FLUVIALI
+                            var parchi_fluviali = new OpenLayers.Layer.WMS(
+                                "Parchi fluviali",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:view_parchi_fluviali',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            parchi_fluviali.events.register('loadstart', this, onloadstart_poi);
+                            parchi_fluviali.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            //END PARCHI FLUVIALI
+
+                            //BEGIN BIOTOPI
+                            var biotopi = new OpenLayers.Layer.WMS(
+                                "Biotopi",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:view_biotopi',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            biotopi.events.register('loadstart', this, onloadstart_poi);
+                            biotopi.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            //END BIOTOPI
+
+                            // BEGIN Reti di riserve
+                            var reti_riserve = new OpenLayers.Layer.WMS(
+                                "Reti di riserve",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:reti_riserve',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            reti_riserve.events.register('loadstart', this, onloadstart_poi);
+                            reti_riserve.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            // END Reti di riserve
+
+                            // BEGIN INVENTARIO
+                            var inventario_punto = new OpenLayers.Layer.WMS(
+                                "Azioni puntuali",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:azioni_punto',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:32632' : false}
+                                }
+
+                            );
+                            inventario_punto.events.register('loadstart', this, onloadstart_poi);
+                            inventario_punto.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            var inventario_linea = new OpenLayers.Layer.WMS(
+                                "Azioni lineari",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:azioni_linea',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:32632' : false}
+                                }
+
+                            );
+                            inventario_linea.events.register('loadstart', this, onloadstart_poi);
+                            inventario_linea.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            var inventario_area = new OpenLayers.Layer.WMS(
+                                "Azioni poligonali",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:azioni_poligono',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.5,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:32632' : false}
+                                }
+
+                            );
+                            inventario_area.events.register('loadstart', this, onloadstart_poi);
+                            inventario_area.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });                            
+                            // END INVENTARI
+
+                            // BEGIN Rete natura 2000
+                            var rete_natura = new OpenLayers.Layer.Vector("Rete Natura 2000", {
+                                protocol: new OpenLayers.Protocol.WFS({
+                                    url: "http://webgis.muse.it/cgi-bin/lifeten",
+                                    featureType: "Rete_NATURA_2000",
+                                    srsName: "EPSG:4326",
+                                    version: "1.0.0"
+                                  }),
+                                  projection: map.displayProjection,
+                                  strategies:[new OpenLayers.Strategy.BBOX()],
+                                  visibility: false,
+                                  styleMap: style_rete
+                            });
+                            rete_natura.events.register('loadstart', this, onloadstart_poi);
+                            rete_natura.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            // END Rete Natura 2000
+
+
+                        //
+                        //END RISERVE NATURALI
+                        //
+
+                            //BEGIN HABITAT 
+                            var habitat = new OpenLayers.Layer.WMS(
+                                "Habitat vegetazionali",
+                                "http://webgis.muse.it/geoserver/WEBGIS/wms",
+                                {
+                                    layers: 'WEBGIS:habitat',
+                                    transparent: true
+                                },
+                                {
+                                    opacity: 0.8,
+                                    ratio: 1, 
+                                    isBaseLayer: false,
+                                    visibility: false,
+                                    yx : {'EPSG:25832' : false}
+                                }
+
+                            );
+                            habitat.events.register('loadstart', this, onloadstart_poi);
+                            habitat.events.register('loadend', this, function(e){
+                                $("#spinner_poi").hide();
+                            });
+                            //END HABITAT
+            
+
+                ////
+                ////END BASEMAPS
+                ////
+
+                ////
+                ////BEGIN MODELS
+                ////
+
+
+                    //--------------
+                    //BEGIN SPECIE FOCALI
+                    //--------------
+
+                        //BEGIN AREE DI ALTA QUOTA
+                        var alta_quota_sp_focali = new OpenLayers.Layer.WMS("Ricchezza di specie focali nelle aree d'alta quota", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "alta_quota_sp_focali",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            },
+                            {
+                                attribution: '<img src="http://webgis.muse.it/static/legends/NEW_LEGEND.png"/>'
+                            }
+                        );
+                        alta_quota_sp_focali.events.register('loadstart', this, onloadstart_poi);
+                        alta_quota_sp_focali.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END AREE DI ALTA QUOTA
+
+                        //BEGIN AMBIENTI APERTI < 1500 M
+                        var ambienti_aperti_sp_focali = new OpenLayers.Layer.WMS("Ricchezza di specie focali negli ambienti aperti sotto i 1500 metri", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "ambienti_aperti_sp_focali",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            }
+                        );
+                        ambienti_aperti_sp_focali.events.register('loadstart', this, onloadstart_poi);
+                        ambienti_aperti_sp_focali.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });        
+                        //END AMBIENTI APERTI < 1500 M
+
+                        //BEGIN BOSCHI DI CONIFERE
+                        var conifere_sp_focali = new OpenLayers.Layer.WMS("Ricchezza di specie focali nelle aree di boschi di conifere", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "conifere_sp_focali",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            }
+                        );
+                        conifere_sp_focali.events.register('loadstart', this, onloadstart_poi);
+                        conifere_sp_focali.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END BOSCHI DI CONIFERE
+
+                        //BEGIN BOSCHI DI LATIFOGLIE
+                        var latifoglie_sp_focali = new OpenLayers.Layer.WMS("Ricchezza di specie focali nelle aree di boschi di latifoglie", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "latifoglie_sp_focali",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            }
+                        );
+                        latifoglie_sp_focali.events.register('loadstart', this, onloadstart_poi);
+                        latifoglie_sp_focali.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END BOSCHI DI LATIFOGLIE
+
+                        //BEGIN AREE UMIDE
+                        var aree_umide_sp_focali = new OpenLayers.Layer.WMS("Ricchezza di specie focali nelle aree umide di fondovalle", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "aree_umide_sp_focali",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            }
+                        );
+                        aree_umide_sp_focali.events.register('loadstart', this, onloadstart_poi);
+                        aree_umide_sp_focali.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END AREE UMIDE
+
+                        //BEGIN BOSCHI PERIFLUVIALI
+                        var boschi_perifluviali_sp_focali = new OpenLayers.Layer.WMS("Ricchezza di specie focali nelle aree di boschi perifluviali", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "boschi_perifluviali_sp_focali",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            }
+                        );
+                        boschi_perifluviali_sp_focali.events.register('loadstart', this, onloadstart_poi);
+                        boschi_perifluviali_sp_focali.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END BOSCHI PERIFLUVIALI
+
+                        //BEGIN AMBIENTI PERIFLUVIALI
+                        var ambienti_perifluviali_sp_focali = new OpenLayers.Layer.WMS("Ricchezza di specie focali nelle aree di ambienti perifluviali", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "ambienti_perifluviali_sp_focali",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            }
+                        );
+                        boschi_perifluviali_sp_focali.events.register('loadstart', this, onloadstart_poi);
+                        boschi_perifluviali_sp_focali.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END AMBIENTI PERIFLUVIALI    
+
+                        //BEGIN PARETI ROCCIOSE
+                        var rocce_sp_focali = new OpenLayers.Layer.WMS("Ricchezza di specie focali nelle aree di pareti rocciose sotto i 1500 m", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "rocce_sp_focali",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            }
+                        );
+                        rocce_sp_focali.events.register('loadstart', this, onloadstart_poi);
+                        rocce_sp_focali.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END PARETI ROCCIOSE
+
+                        //BEGIN COLTURE ARBOREE
+                        var colture_arboree_sp_focali = new OpenLayers.Layer.WMS("Ricchezza di specie focali nelle aree di colture arboree", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "colture_arboree_sp_focali",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                              }
+                        );
+                        colture_arboree_sp_focali.events.register('loadstart', this, onloadstart_poi);
+                        colture_arboree_sp_focali.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END COLTURE ARBOREE
+
+                        //BEGIN RICCHEZZA
+                        var ricchezza = new OpenLayers.Layer.WMS("Ricchezza relativa della biodiversità faunistica trentino", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "ricchezza",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            }
+                        );
+                        ricchezza.events.register('loadstart', this, onloadstart_poi);
+                        ricchezza.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END RICCHEZZA
+
+                        //BEGIN HOTSPOTS
+                        var hotspots = new OpenLayers.Layer.WMS("Zone contigue ad elevata biodiversità maggiori di 200 ettari", "http://webgis.muse.it/cgi-bin/lifeten_raster",
+                            {
+                                layers: "hotspots",
+                                transparent: true
+                            }, {
+                                isBaseLayer: false,
+                                opacity: 0.8,
+                                visibility: false
+                            }
+                        );
+                        hotspots.events.register('loadstart', this, onloadstart_poi);
+                        hotspots.events.register('loadend', this, function(e){
+                            $("#spinner_poi").hide();
+                        });
+                        //END HOTSPOTS
+
+                    //
+                    //END SPECIE FOCALI
+                    //
+
+                ////
+                ////END MODELS
+                ////
+
+
+            map.addLayers([    mapnik, // BASELAYER
+                provincia, comuni, comunita, ato,// Confini amministrativi
+                parchi_naturali, sic, dolomiti_unesco, zps, parchi_fluviali, biotopi, // Riserve naturali 
+                habitat, // Altro 
+                //test, 
+                alta_quota_sp_focali, ambienti_aperti_sp_focali, conifere_sp_focali, latifoglie_sp_focali, aree_umide_sp_focali, boschi_perifluviali_sp_focali, ambienti_perifluviali_sp_focali, rocce_sp_focali, colture_arboree_sp_focali, ricchezza, hotspots, // Mappe da modello
+                    drawings, // Mappe per gestione della cartografia personalizzata
+                    inventario_punto, inventario_linea, inventario_area
+            ]);
+
+            
+
+
+
+
+            if (sessvars.area_global != null){ // Qui è dove qualcuno sta barando, definendo una variabile globale da un'altra pagina... :P
+                bound = OpenLayers.Bounds.fromString(sessvars.area_global);
+                map.zoomToExtent(bound);
+            } else {
+                //Centro la mappa sull'extent definito in precedenza
+                map.zoomToExtent(map.maxExtent);
+            }        
+
+            //create select control for all layers
+
+            $('#spinner_poi').css('top', pagesize[3]/2); //pageWidth,pageHeight,windowWidth,windowHeigh
+            $('#spinner_poi').css('left', pagesize[4]/2);
+            $('#spinner_poi').append('<img src="http://webgis.muse.it/static/icons/spinner.gif" alt="Caricamento..." />');
+            $('#spinner_poi').hide();
+            $('#spinner_poly').css('top', pagesize[3]/2);
+            $('#spinner_poly').css('left', pagesize[4]/2);
+            $('#spinner_poly').append('<img src="http://webgis.muse.it/static/icons/spinner.gif" alt="Caricamento..." />');
+            $('#spinner_poly').hide();
+            // $('#layerswitcher').append('<br /><div id="removelayer" class="right"> <select id="remove" onchange="javascript:removeLayer();"><option value="" selected="selected">Rimuovi un layer</option></select></div>');
+            $('#logofooter img').each(function(index) {
+              $(this).css('width', pagesize[2]/10);
+            });
+            sessvars.$.clearMem();
+            nLayers = map.getLayersByClass("OpenLayers.Layer.Vector").length + 1
+
+        } //ENDFUNCTION INIT
+
+        ///////////////
+        //END CONTAINER FOR ALL GEOGRAPHICAL ITEMS 
+        ///////////////
+
+    </script>
+<!---------------------->
+<!-- END MAP SCRIPTS-->
+<!---------------------->    
+{% endblock %}
+
+{% block content %}
+
+    <body onload="javascript:init()"> <!-- That's where I say "when you are fully charged, fire the init() function" -->
+
+        <table width="100%" height="90%">
+            <tr>
+                  <td>
+                    <div id="map">
+                          <div id="spinner_poi"></div>
+                          <div id="spinner_poly"></div>
+                        <div id="output-id"></div>
+                    </div>
+                    <div id="navigation-panel" style="float: right; width: 29%;margin-top: 10px;top:10px">
+                        <div style="border: 1px solid blue;text-align: left"><h3> Pannello di navigazione </h3> </div>
+                        <div id="accordion">    
+                              <h4>Elenco mappe</h4>
+                              <div id="layerswitcher">
+
+                                <h4>Mappe di base</h4>
+                                <div id="mappebase">
+
+                                    <h4>Confini amministrativi</h4>
+                                    <div id="confini_amministrativi">
+                                        <table>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="Amministrazioni comunali">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      <div style="position: relative;">    
+                                                        <div style="float: left">
+                                                              <span>Comuni</span>
+                                                              </br>
+                                                              <div class="rectangle-legend" style="background-color: #AA0000;">
+                                                         </div>
+                                                        </div>
+                                                          <div style="position:relative; float:right; text-align: middle;">
+                                                            <select id="COMUNE" class="dropdown" onchange="javascript:zoomToArea(this,'muni')">
+                                                                <option value="default" selected="selected">Zoom ad un comune</option>
+                                                             </select>
+                                                        </div>
+                                                     </div>                                                  
+                                                  </td>
+                                            </tr>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="Comunità di valle">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      Comunità di valle
+                                                      </br>
+                                                    <div class="rectangle-legend" style="background-color: #FFAA00;"></div>
+                                                  </td>        
+                                            </tr>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="Ambiti Territoriali Omogenei">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      Ambiti Territoriali Omogenei
+                                                      </br>
+                                                    <div class="rectangle-legend" style="background-color: #66FF66; border"></div>
+                                                </td>
+                                            </tr>                                            
+                                        </table>
+                                    </div>
+
+                                    <h4>Riserve naturali</h4>
+                                    <div id="riserve_naturali">
+                                        <table>
+                                            <tr>    
+                                                  <td>
+                                                      <button class="vis_button" name="Parchi naturali">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      Parchi naturali
+                                                      </br>
+                                                    <div class="rectangle-legend" style="background-color: #55AA00;"></div>    
+                                                  </td>
+                                            </tr>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="Dolomiti UNESCO">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      Dolomiti UNESCO
+                                                      </br>
+                                                    <div class="rectangle-legend" style="background-color: #AA5500;"></div>
+                                                  </td>
+                                            </tr>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="SIC">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      <div style="position: relative;">    
+                                                        <div style="float: left">
+                                                              <span>SIC</span>
+                                                              </br>
+                                                              <div class="rectangle-legend" style="background-color: #005500;">
+                                                         </div>
+                                                        </div>
+                                                          <div style="position:relative; float:right; text-align: middle;">
+                                                            <select id="SIC" class="dropdown" onchange="javascript:zoomToArea(this,'park')">
+                                                                <option value="default" selected="selected">Zoom ad un SIC</option>
+                                                             </select>
+                                                        </div>
+                                                     </div>
+                                                  </td>
+                                            </tr>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="ZPS">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      <div style="position: relative;">    
+                                                        <div style="float: left">
+                                                              <span>ZPS</span>
+                                                              </br>
+                                                              <div class="rectangle-legend" style="background-color:  #AAAA00;">
+                                                         </div>
+                                                        </div>
+                                                          <div style="position:relative; float:right; text-align: middle;">
+                                                            <select id="ZPS" class="dropdown" onchange="javascript:zoomToArea(this,'park')">
+                                                                <option value="default" selected="selected">Zoom ad una ZPS</option>
+                                                             </select>
+                                                        </div>
+                                                     </div>                                                              
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="Parchi fluviali">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      Parchi fluviali
+                                                      </br>
+                                                    <div class="rectangle-legend" style="background-color: #00AAFF;"></div>
+                                                </td>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="Biotopi">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      <div style="position: relative;">    
+                                                        <div style="float: left">
+                                                              <span>Biotopi</span>
+                                                              </br>
+                                                              <div class="rectangle-legend" style="background-color: #00AA00;">
+                                                         </div>
+                                                        </div>
+                                                          <div style="position:relative; float:right; text-align: middle;">
+                                                            <select id="BIOTOPO" class="dropdown" onchange="javascript:zoomToArea(this,'park')">
+                                                                <option value="default" selected="selected">Zoom ad un biotopo</option>
+                                                             </select>
+                                                        </div>
+                                                     </div>                                            
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="Reti di riserve">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      Reti di riserve
+                                                      </br>
+                                                    <div class="rectangle-legend" style="background-color: #FF3333;"></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <h4>Varie</h4>
+                                    <div id="varie">
+                                        <table>
+                                            <tr>
+                                                  <td>
+                                                      <button class="vis_button" name="Habitat vegetazionali">Visualizza</button>
+                                                  </td>
+                                                  <td>
+                                                      Habitat vegetazionali
+                                                      </br>
+                                                      <img src="{{ STATIC_URL }}icons/alert.png" class="inline"/> <small>Il caricamento può essere molto lento: si consiglia di zoomare ad un'area specifica prima di abilitare il layer</small>
+                                                  </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                
+                                <h4>Ricchezza di specie focali</h4>
+                                <div id="mappeazionea3">
+                                      <table>
+                                        <small>
+                                            Le seguenti cartografie sono state prodotte tramite l'applicazione di modelli statistici di 
+                                            tipo <em>MaxEnt</em> alla distribuzione delle specie prioritarie, coniugando i vari risultati per ogni macroambiente. Per dettagli, si veda:
+                                                <ol>
+                                                    <li>il <a href="http://www.lifeten.tn.it/binary/pat_lifeten/azioni_preparatorie/LifeTEN_Report_A3.1395234092.pdf"><u>Report dell'Azione A3</u></a>, per la loro produzione;</li>
+                                                    <li>il <a href="http://www.lifeten.tn.it/binary/pat_lifeten/azioni_preparatorie/memorandum_report_a3.1395234210.pdf"><u>Memorandum interpretativo (bozza)</u></a>, per dettagli sul metodo statistico.
+                                                </ol>
+                                        </small>
+                                        <tr>
+                                              <td><button class="vis_button" name="Ricchezza di specie focali nelle aree d'alta quota">Visualizza</button></td>
+                                              <td>Alta quota</td>
+                                        </tr>
+                                        <tr>
+                                        <tr>
+                                              <td><button class="vis_button" name="Ricchezza di specie focali negli ambienti aperti sotto i 1500 metri">Visualizza</button></td>
+                                              <td>Ambienti aperti sotto i 1500m</td>
+                                        </tr>
+                                        <tr>                                        
+                                              <td><button class="vis_button" name="Ricchezza di specie focali nelle aree di boschi di conifere">Visualizza</button></td>
+                                              <td>Boschi di conifere</td>
+                                        </tr>
+                                        <tr>
+                                              <td><button class="vis_button" name="Ricchezza di specie focali nelle aree di boschi di latifoglie">Visualizza</button></td>
+                                              <td>Boschi di latifoglie</td>
+                                        </tr>
+                                        <tr>
+                                              <td><button class="vis_button" name="Ricchezza di specie focali nelle aree umide di fondovalle">Visualizza</button></td>
+                                              <td>Aree umide di fondovalle</td>
+                                        </tr>
+                                        <tr>
+                                              <td><button class="vis_button" name="Ricchezza di specie focali nelle aree di boschi perifluviali">Visualizza</button></td>
+                                              <td>Boschi perifluviali</td>
+                                        </tr>
+
+                                        <tr>
+                                              <td><button class="vis_button" name="Ricchezza di specie focali nelle aree di ambienti perifluviali">Visualizza</button></td>
+                                              <td>Ambienti perifluviali</td>                                        
+                                            <td>
+                                        </tr>
+                                        <tr>
+                                              <td><button class="vis_button" name="Ricchezza di specie focali nelle aree di pareti rocciose sotto i 1500 m">Visualizza</button></td>
+                                              <td>Pareti rocciose sotto i 1500 m</td>
+                                        </tr>
+                                        <tr>
+                                              <td><button class="vis_button" name="Ricchezza di specie focali nelle aree di colture arboree">Visualizza</button></td>
+                                              <td>Colture arboree</td>
+                                        </tr>
+                                        <tr>
+                                              <td><button class="vis_button" name="Ricchezza relativa della biodiversità faunistica trentino">Visualizza</button></td>
+                                              <td>Ricchezza relativa della biodiversità faunistica</td>
+                                        </tr>
+                                        <tr>
+                                              <td><button class="vis_button" name="Zone contigue ad elevata biodiversità maggiori di 200 ettari">Visualizza</button></td>
+                                              <td>Zone contigue ad elevata biodiversità maggiori di 200 ettari</td>
+                                        </tr>
+                                      </table>
+                                </div>
+                                
+                                <h4>Mappe delle singole specie</h4>
+                                <div id="mappeprogetto">
+                                <span id="accordion_text"> Non hai ancora selezionato alcuna specie!</span>    
+                                      <table id="elenco_mappe">
+              
+                                      </table>
+                                </div>
+
+                                <!-- <h4>Azioni inventari</h4>
+                                <div id="mappeinventari">
+                                    <table id="elenco_mappe_inventari">
+                                        <tr>
+                                            <td>
+                                                <button class="vis_button" name="Azioni puntuali">Visualizza</button>
+                                            </td>
+                                            <td>
+                                                Azioni puntuali
+                                                </br>
+                                                <div class="rectangle-legend" style="background-color: #FF3333;"></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <button class="vis_button" name="Azioni lineari">Visualizza</button>
+                                            </td>
+                                            <td>
+                                                Azioni lineari
+                                                </br>
+                                                <div class="rectangle-legend" style="background-color: #FF3333;"></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <button class="vis_button" name="Azioni poligonali">Visualizza</button>
+                                            </td>
+                                            <td>
+                                                Azioni poligonali
+                                                </br>
+                                                <div class="rectangle-legend" style="background-color: #FF3333;"></div>
+                                            </td>
+                                        </tr>                                                      
+                                    </table>                                                                        
+                                </div> -->
+
+                              </div> <!-- End of layerswitcher -->
+                              
+                              <!-- <h4> Filtri </h4>
+                              <div id='filtri_azioni'>
+                                    <div style="position:relative; float:left; text-align: middle;">
+                                        <select id="COMUNE_FILTER" class="dropdown" onchange="javascript:zoomToArea(this,'muni')">
+                                            <option value="default" selected="selected">Per comune</option>
+                                        </select>
+                                    </div>
+                                    <div style="position:relative; float:left; text-align: middle;">
+                                        <select id="ZPS_FILTER" class="dropdown" onchange="javascript:zoomToArea(this,'park')">
+                                            <option value="default" selected="selected">Per ZPS</option>
+                                        </select>
+                                    </div>                                    
+                                    <div style="position:relative; float:left; text-align: middle;">
+                                        <select id="ATO_FILTER" class="dropdown" onchange="javascript:zoomToArea(this,'ato')">
+                                            <option value="default" selected="selected">Per ATO</option>
+                                        </select>
+                                    </div>                                    
+                                    <div style="position:relative; float:left; text-align: middle;">
+                                        <select id="COMUNITA_FILTER" class="dropdown" onchange="javascript:zoomToArea(this,'comunita')">
+                                            <option value="default" selected="selected">Per Comunità di Valle</option>
+                                        </select>
+                                    </div>                                    
+
+                              </div> -->
+
+                              <h4>Selezione tassonomica</h4>
+                              <div id="classe">
+                                <table>
+                                      <tr>
+                                        <td><b>Seleziona la classe</b>:</td>
+                                        <td><form>
+                                            <select id="class" onchange='javascript:ordo();'>
+                                                <option value="default" selected="selected">Seleziona una classe</option>
+                                            </select>
+                                        </form></td>
+                                      </tr>
+                                </table>
+                              </div>
+
+                              <h4>Selezione specie-specifica</h4>
+                              <div id="tabspecie" class="ui-widget">
+                                <label for="tagspecie">Seleziona specie: </label>
+                                <input id="tagspecie" />
+                              </div>
+
+          
+                              <h4>Esporta</h4>
+                              <div id="export">
+                                <table>
+                                      <tr>
+                                        <td><b>Seleziona il layer</b>:</td>
+                                        <td><form><select id="export_layer"></select></form></td>
+                                      </tr>
+                                      <tr>
+                                        <td><b>Seleziona il formato</b>:</td>
+                                        <td><form>
+                                            <select id="export_format">
+                                                  <option value="KML" selected="selected">KML</option>
+                                                  <option value="ESRI Shapefile">ESRI Shapefile</option>
+                                                  <option value="GeoJSON">GeoJSON</option>
+                                                  <option value="GML">GML</option>
+                                            </select>
+                                          </form></td>
+                                      </tr>
+                                      <tr class="right">
+                                        <td colspan="2"><a href="javascript:exportGeo()" class="button">Richiedi dati</a></td>
+                                      </tr>
+                                </table>      
+                              </div>
+                        </div> <!-- Accordion end -->
+                    </div> <!--- Navigation panel end -->    
+
+                    <!-- Floating table -->
+                    <div id="infofeat" title="Informazioni elementi selezionati">
+                          <div id="datatabs">
+                               <ul>
+                                  <li><a href="#datafeat">Informazione elementi</a></li>
+                                  <li><a href="#dataspecie">Informazione specie</a></li>
+                                  <li><a href="#datainstitution">Informazione istituzioni</a></li>
+                            </ul>
+                    
+                            <div id="datafeat"></div>
+                            <div id="dataspecie"></div>
+                            <div id="datainstitution"></div>
+                          </div>
+                    </div>
+                      
+                      </td>
+                    </tr>
+                      </table>
+
+
+{% endblock %}
+
+{% block link %}
+<div class="linkblock">
+    <td class="footercell"><a href="/lifeten" class='button small'>Homepage</a></td>
+    <td class="footercell"><a href="/viewdata" class='button small'>Dati tabellari</a></td>
+    <td class="footercell"><a href="/viewspecie" class='button small'>Lista specie</a></td>
+</div>          
+{% endblock %}
+

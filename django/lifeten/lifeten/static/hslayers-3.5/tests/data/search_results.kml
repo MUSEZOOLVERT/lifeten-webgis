@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Style id="ubyt">
+      <IconStyle><Icon><href>http://www.bnhelp.cz/projects/khmesto/img/pomnik.gif</href></Icon></IconStyle>
+    </Style>
+
+<Placemark id="fadr-1">
+  <name>Kutná Hora,Hlouška,248</name>
+  <description><![CDATA[ 
+		<img src="http://www.bnhelp.cz/projects/khmesto/img/wc.gif"/> Kutná Hora, Hlouška, Hloušecká 248/23 <hr/>
+		<i>druhý řádek</i>
+		]]>
+	</description>
+  <Point><coordinates>15.265899504051,49.953708721261,15 </coordinates></Point>
+  <styleUrl>#ubyt</styleUrl>
+</Placemark><Placemark id="fadr-2">
+  <name>Kutná Hora,Žižkov,248</name>
+  <description><![CDATA[ 
+		<img src="http://www.bnhelp.cz/projects/khmesto/img/wc.gif"/> Kutná Hora, Žižkov, Vojtěšská 248/27 <hr/>
+		<i>druhý řádek</i>
+		]]>
+	</description>
+  <Point><coordinates>15.255573960746,49.945491828712,15 </coordinates></Point>
+  <styleUrl>#ubyt</styleUrl>
+</Placemark><Placemark id="fadr-3">
+  <name>Kutná Hora,Kutná Hora-Vnitřní Město,248</name>
+  <description><![CDATA[ 
+		<img src="http://www.bnhelp.cz/projects/khmesto/img/wc.gif"/> Kutná Hora, Kutná Hora-Vnitřní Město, Česká 248/10 <hr/>
+		<i>druhý řádek</i>
+		]]>
+	</description>
+  <Point><coordinates>15.26509188761,49.950516395679,15 </coordinates></Point>
+  <styleUrl>#ubyt</styleUrl>
+</Placemark><Placemark id="fadr-4">
+  <name>Kutná Hora,Sedlec,248</name>
+  <description><![CDATA[ 
+		<img src="http://www.bnhelp.cz/projects/khmesto/img/wc.gif"/> Kutná Hora, Sedlec, Pod Hájem 248/ <hr/>
+		<i>druhý řádek</i>
+		]]>
+	</description>
+  <Point><coordinates>15.287999474914,49.965307243814,15 </coordinates></Point>
+  <styleUrl>#ubyt</styleUrl>
+</Placemark><Placemark id="fadr-5">
+  <name>Kutná Hora,Kaňk,248</name>
+  <description><![CDATA[ 
+		<img src="http://www.bnhelp.cz/projects/khmesto/img/wc.gif"/> Kutná Hora, Kaňk,  248/ <hr/>
+		<i>druhý řádek</i>
+		]]>
+	</description>
+  <Point><coordinates>15.269179039364,49.978847025577,15 </coordinates></Point>
+  <styleUrl>#ubyt</styleUrl>
+</Placemark><Placemark id="fadr-6">
+  <name>Kutná Hora,Malín,248</name>
+  <description><![CDATA[ 
+		<img src="http://www.bnhelp.cz/projects/khmesto/img/wc.gif"/> Kutná Hora, Malín,  248/ <hr/>
+		<i>druhý řádek</i>
+		]]>
+	</description>
+  <Point><coordinates>15.300989752542,49.969600556182,15 </coordinates></Point>
+  <styleUrl>#ubyt</styleUrl>
+</Placemark></Document>
+</kml>

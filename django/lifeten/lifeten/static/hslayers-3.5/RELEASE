@@ -1,0 +1,47 @@
+Release howto
+=============
+
+1 - make new tag
+    
+    cd tags
+    svn copy svn://bnhelp.cz/hslayers/branches/hslayers-x.y hslayers-major.minor.rev
+
+2 - edit version in the tag
+
+    vim hslayers-major.minor.rev/source/HSLayers.js
+
+    FIX HSLayers.version attribute
+
+3 - Commit
+
+4 - make package
+
+    cd /tmp/
+    svn export svn://bnhelp.cz/hslayers/tags/hslayers-x.y.z 
+    tar czf hslayers-x.y.z.tgz hslayers-x.y.z
+
+5 - upload the package
+
+    go to http://redmine.ccss.cz/projects/hslayers/files/new
+
+    upload the file
+
+7 - Fix the wiki
+
+    go to http://redmine.ccss.cz/projects/hslayers/wiki/Documentation
+
+    fix the change log
+
+8 - Fix the web page
+
+    go to the source/docs/web
+
+    edit source/index.rst -> fix News section
+
+    edit download/index.rst -> fix the links
+
+    make html
+
+    rsync -vr build/html/* ns.lesprojekt.cz:/data/www/www.bnhelp.cz/hslayers/
+
+9 - done

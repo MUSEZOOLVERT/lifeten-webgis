@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="../build/OpenLayers.js"></script>
+  <script type="text/javascript" src="../source/HSLayers.js"></script>
+  <script type="text/javascript" src="../source/HSLayers/Layer/SearchParser.js"></script>
+  <script type="text/javascript" src="../source/HSLayers/Control/SelectFeature.js"></script>
+  <script type="text/javascript" src="../source/HSLayers/Popup.js"></script>
+  <script type="text/javascript" src="/wwwlibs/ext/3.1.1/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="/wwwlibs/ext/3.1.1/ext-all.js"></script>
+
+  <title>Testing HSLayers.Layer.SearchParser</title>
+  <script type="text/javascript">
+
+    var test;
+    var search;
+    var map;
+
+    function test_01(t) {
+        test =t;
+        t.plan(13);
+
+
+        map = new OpenLayers.Map("map");
+        map.addLayer(new OpenLayers.Layer.WMS("base",
+                    "http://labs.metacarta.com/wms-c/Basic.py",
+                    {LAYERS:"basic",
+                    FORMAT:"image/png"}));
+        // create searching layer
+        search = new HSLayers.Layer.SearchParser("Search",{isBaseLayer:false,target:"target"});
+        t.ok (search instanceof HSLayers.Layer.SearchParser,"Search instance created");
+
+        var select = new HSLayers.Control.SelectFeature([search],
+            {toggle:true, clickout: true});
+        map.addControl(select);
+        select.activate();
+
+
+        // add layer to map
+        t.eq(map.addLayer(search),undefined,"Add search layer to map");
+
+        map.zoomToMaxExtent();
+
+        // search for something
+        OpenLayers.Request.GET({
+                url: "data/search_results.kml",
+                scope: search,
+                async: false,
+                success: search.parse
+                });
+
+        t.eq(6,search.features.length, "6 features parsed");
+        t.ok(map.getExtent().getCenterLonLat().equals(search.getDataExtent().getCenterLonLat()),"Map is zoomed to found features");
+
+
+        if (window.Ext) {
+            // test if store and grid are rendered
+            t.ok(search.store,"Store created");
+            t.ok(search.grid,"Grid available");
+
+            // test if every feature has it's data record
+            t.eq(search.features.length, search.store.data.length,"Features loaded into store");
+
+            // click on the row -> recenter the map
+            search.grid.fireEvent("cellclick",search.grid, 0, 0, {});
+            var center = map.getCenter();
+            t.ok(search.features[0].geometry.equals(new OpenLayers.Geometry.Point(center.lon,center.lat)),"Recentered corectly");
+
+            // test if clicking on the map works
+            select.select(search.features[1]);
+            var selectedRecord = search.grid.getSelectionModel().getSelected()
+            t.eq(selectedRecord.json.id, search.features[1].id,"Features selected by mouse focused in list");
+        }
+        else {
+        }
+
+        search.destroyFeatures();
+        search.protocol.format.extractStyles = false;
+        map.zoomToMaxExtent();
+
+        t.eq(0,search.features.length, "features removed");
+
+        // search from URL directly
+        search.events.register("featuresadded", this, 
+                function(){
+                    test.eq(6,search.features.length, "6 features parsed");
+                    test.ok(map.getExtent().getCenterLonLat().equals(map.maxExtent.getCenterLonLat()),"Map is NOT zoomed to found features");
+                    test.eq(null, search.features[0].style,"Styles are note parsed");
+
+                });
+
+        search.search("data/search_results.kml",false,true);
+        t.wait_result(3);
+
+    };
+
+    var test_02 = function(t) {
+        map = new OpenLayers.Map("map");
+        map.addLayer(new OpenLayers.Layer.WMS("base",
+                    "http://labs.metacarta.com/wms-c/Basic.py",
+                    {LAYERS:"basic",
+                    FORMAT:"image/png"}));
+        // create searching layer
+        search2 = new HSLayers.Layer.SearchParser("Search",{isBaseLayer:false,target:"target"});
+    };
+
+
+  </script>
+</head>
+<body>
+    <div id="map" style="width:500px; height: 500px; display: none"></div>
+    <div id="target"></div>
+</body>
+</html>

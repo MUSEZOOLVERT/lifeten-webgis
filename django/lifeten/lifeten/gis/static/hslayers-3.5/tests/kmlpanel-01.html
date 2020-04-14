@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+  <script type="text/javascript" src="/wwwlibs/ext/3.1.1/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="/wwwlibs/ext/3.1.1/ext-all.js"></script>
+    <script type="text/javascript" src="../build/OpenLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers/KMLPanel.js"></script>
+
+    <title>Testing HSLayers.KMLPanel</title>
+    <script type="text/javascript">
+
+    var map;
+    var kmlPanel;
+    var test;
+    function test01_url(t) {
+
+        OpenLayers.ProxyHost = "/cgi-bin/olproxy.cgi?url=";
+        HSLayers.feedbackScript = "../source/scripts/feedback.php";
+
+        test = t;
+
+        t.plan(3);
+
+
+        map = new OpenLayers.Map("map");
+        map.addLayer(new OpenLayers.Layer.WMS("MetaCarta WMS",
+                    "http://labs.metacarta.com/wms/vmap0",
+                    {layers: 'basic'}
+                ));
+        map.zoomToMaxExtent();
+
+        kmlPanel = new HSLayers.KMLPanel({renderTo:"kmlpanel"});
+        kmlPanel.setMap(map);
+
+        t.ok(kmlPanel instanceof HSLayers.KMLPanel,"Panel created");
+
+        map.events.register("addlayer",this, verifyLayer);
+
+        kmlPanel.urlField.setValue("http://maps.google.com/maps/ms?vps=3&jsv=259e&doflg=ptk&ie=UTF8&hl=cs&oe=UTF8&msa=0&msid=114844535745622125610.00048c502964a21aae6fd&output=kml");
+
+        kmlPanel.onLoadClick();
+
+        t.wait_result(3);
+
+    };
+
+    var verifyLayer = function() {
+        var t = test;
+
+        t.eq(2,map.layers.length);
+
+        map.layers[1].events.register("featuresadded",this,verifyFeatures);
+    };
+
+    var verifyFeatures = function(e) {
+        var t = test;
+        t.eq(3,map.layers[1].features.length,"features parsed");
+    };
+
+  </script>
+</head>
+<body>
+    <div id="map" style="width:500px; height: 500px; display: none"></div>
+    <div id="kmlpanel"></div>
+</body>
+</html>

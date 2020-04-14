@@ -1,0 +1,29 @@
+/**
+ * CSS for initial loading info
+ */
+ 
+.loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -25px;
+    margin-left: -100px;
+    width:200px; 
+    height:50px;
+}
+
+
+.loader_img {
+    background:url(img/loading.gif); 
+    width: 50px;
+    height: 50px;
+    float: left;
+}
+
+.loader_text {
+    font-size: 14pt;
+    font-weight: bold;
+    position: relative;
+    top: 25%;
+    left: 60px;
+}

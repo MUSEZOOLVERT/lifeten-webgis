@@ -1,0 +1,463 @@
+      var map, availableSpecie, availableGenere, style_comuni, style_aree, selectControl, infoSpecie = {}, instiSpecie = {}, user_insti, nLayers;
+
+      //Creo la mappa e definisco alcuni controlli di base
+      function init(){
+	user_insti = {{ user.get_profile.institution_id|default:"null" }};
+	user_area = {{ user.get_profile.area_id|default:"null" }};
+	// dimensioni della pagina
+	var pagesize = getPageSize();
+	$('#map').css('height', pagesize[3]-110);
+	// crea dialogo per la visualizzazione delle informazioni
+	$('#infofeat').dialog({
+	  autoOpen: false,
+	  modal: true,
+	  resizable: true,
+	  draggable: true,
+	  width: 1250,
+	  height: 600,
+	  minWidth: 800,
+// 	  maxWidth: pagesize[2],
+// 	  maxHeight: pagesize[3],
+	  //dialogClass: 'no-close'
+	  close: function(ev, ui) { selectControl.unselectAll(); }
+	});
+	$('#infofeat').closest('div.ui-dialog').css('z-index', '3000');
+	
+	$('#infofeat').bind('dialogopen', function(){
+        /* init tabs, when dialog is opened */ 
+	$('#datatabs').tabs();
+	});
+	
+	$("#infofeat").bind('dialogclose', function(){
+	    $("#datatabs").tabs('destroy'); 
+	});
+	// crea accordion
+	$( "#accordion" ).accordion({collapsible: true, active: false, heightStyle: 'content'});
+	$("#accordion").find('h3').filter(':contains(Esporta)').hide();
+	$("#accordion").find('h3').filter(':contains(Mappe progetto)').hide();
+	$("#layerswitcher").accordion({collapsible: true, active: false, heightStyle: 'content'});
+	$("#progDialog").dialog({
+	    height: 100,
+	    width:500,
+	    modal: true,
+	    autoOpen: false
+	});
+	$('#progDialog').closest('div.ui-dialog').css('z-index', '3000')
+	$("#progBar").progressbar({value:false});
+
+	// crea lista per specie
+	availableSpecie = new Array();
+	// popola la lista della specie
+	$.getJSON('/returnlistspecie/', function(data){
+	  var length = data.length;
+	  for(var j = 0; j < length; j++){
+	    availableSpecie.push(data[j].fields.scientificname);
+	    if (data[j].fields.vernacularname != null){
+	      availableSpecie.push(data[j].fields.vernacularname);
+	    }
+	  }
+	});
+	setButton(".vis_button");
+	// crea il form con autocompletamento per specie
+	$( "#tagspecie" ).autocomplete({
+	  source: availableSpecie,
+	  // quando selezionato si carica il file
+	  select: function( event, ui ) {
+	    polyurl = "/returnpolygonfromspecie/" + ui.item.value
+	    var styleColor = color();
+	    $.getJSON("/returninfofromspecie/" + ui.item.value, function(data){
+	      infoSpecie[ui.item.value] = data;
+	      addLayerFrom(ui.item.value, polyurl, data[0].fields.sensitivity, styleColor);
+	    });
+	    $.getJSON("/returnwms/" + ui.item.value, function(data){
+	      if (data[0].fields.raster == 1 && user_insti == 5){
+		addLayerRaster(ui.item.value, data[0].pk);
+	      }
+	    });
+	    $.getJSON("/returninstifromspecie/" + ui.item.value, function(data){
+	      instiSpecie[ui.item.value] = data;
+	    });
+	    if (user_insti && ! user_area) {
+	      layerurl = "/returnkmlfromspecie/" + ui.item.value + "/" + user_insti
+	      addLayerFrom(ui.item.value, layerurl, false, styleColor);
+	    } else if (user_insti && user_area) {
+	      layerurl = "/returnkmlfromspecie/" + ui.item.value + "/" + user_insti + "/" + user_area
+	      addLayerFrom(ui.item.value, layerurl, false, styleColor);
+	    }
+	    $('input#tagspecie').val('');
+	    return false;
+	  }
+	});
+// 	// crea lista per genere
+// 	availableGenere = new Array();
+// 	// popola la lista del genere
+// 	$.getJSON('/returnlistgenere/', function(data){
+// 	  var length = data.length;
+// 	  for(var j = 0; j < length; j++){
+// 	    availableGenere.push(data[j].fields.genus);
+// 	  }
+// 	});
+// 	// crea il form con autocompletamento per genere
+// 	$( "#tagenere" ).autocomplete({
+// 	  source: availableGenere,
+// 	  select: function( event, ui ) {
+// 	    layerurl = "/returnpolygonfromspecie/" + ui.item.value
+// 	    addLayerFrom(ui.item.value, layerurl);
+// 	    $.getJSON("/returninfofromgenus/" + ui.item.value, function(data){
+// 	      infoSpecie[ui.item.value] = data;
+// 	    });
+// 	    $.getJSON("/returninstifromgenus/" + ui.item.value, function(data){
+// 	      instiSpecie[ui.item.value] = data;
+// 	    });
+// 	    $('input#tagspecie').val('');
+// 	    return false;
+// 	  }
+// 	});
+	// inizializza select classe
+	$.getJSON('/returnclass/', function(data){
+	  var length = data.length;
+	  for(var j = 0; j < length; j++){
+	    var newOption = $("<option></option>").text(data[j].fields.class_field).val(data[j].fields.class_field);
+	    $('#class').append(newOption);
+	  }
+	});
+        map = new OpenLayers.Map("map",{
+		controls:[
+        	new OpenLayers.Control.Navigation(),
+        	new OpenLayers.Control.PanZoomBar(),
+//         	new OpenLayers.Control.ScaleLine(),
+        	new OpenLayers.Control.MousePosition(),
+        	new OpenLayers.Control.OverviewMap(),
+        	new OpenLayers.Control.Attribution(),
+        	new OpenLayers.Control.Scale()],
+		maxExtent: new OpenLayers.Bounds(1158197.60,5724265.46,1337284.95,5868098.75),
+		restrictedExtent: new OpenLayers.Bounds(1158197.60,5724265.46,1337284.95,5868098.75),
+		maxResolution: 1565.0399,
+		units: "meters",
+		projection: new OpenLayers.Projection("EPSG:900913"),
+        	displayProjection: new OpenLayers.Projection("EPSG:4326")
+	});
+	OpenLayers.ProxyHost="http://localhost/cgi-bin/proxy.cgi?url=";
+// 	var layerswitch = new OpenLayers.Control.LayerSwitcher({'div':OpenLayers.Util.getElement('layerswitcher')});
+// 	map.addControl(layerswitch);
+// 	$("#layerswitcher").find(".baseLbl").text("Mappa di base");
+// 	$("#layerswitcher").find(".dataLbl").text("Mappe del Progetto LIFE+ T.E.N.");
+        var mapnik = new OpenLayers.Layer.OSM(
+	  "Openstreet Map",
+          "http://tile.openstreetmap.org/${z}/${x}/${y}.png",
+          {isBaseLayer:true}
+        );
+
+        var provincia = new OpenLayers.Layer.Vector("Confine amministrativo provinciale", {
+	  protocol: new OpenLayers.Protocol.WFS({
+	    url: "http://217.199.4.93/cgi-bin/lifeten", //url: "http://217.199.4.93/cgi-bin/lifeten", 
+	    featureType: "Provincia",
+	    srsName: "EPSG:4326",
+	    version: "1.0.0"
+	  }),
+	  projection: map.displayProjection,
+	  strategies:[new OpenLayers.Strategy.BBOX()],
+	  visibility: true,
+	  styleMap: style_provi
+        });
+        provincia.events.register('loadstart', this, onloadstart_poi);
+	provincia.events.register('loadend', this, function(e){
+						  $("#spinner_poi").hide();
+						});
+        var comunita = new OpenLayers.Layer.Vector("Comunità di valle", {
+	  protocol: new OpenLayers.Protocol.WFS({
+	    url: "http://217.199.4.93/cgi-bin/lifeten",
+	    featureType: "Comunita_valle",
+	    srsName: "EPSG:4326",
+	    version: "1.0.0"
+	  }),
+	  projection: map.displayProjection,
+	  strategies:[new OpenLayers.Strategy.BBOX()],
+	  visibility: false,
+	  styleMap: style_valli
+        });
+        comunita.events.register('loadstart', this, onloadstart_poi);
+	comunita.events.register('loadend', this, function(e){
+						  $("#spinner_poi").hide();
+						});
+        var comuni = new OpenLayers.Layer.Vector("Confini amministrativi comunali", {
+	  protocol: new OpenLayers.Protocol.WFS({
+	    url: "http://217.199.4.93/cgi-bin/lifeten",
+	    featureType: "Comuni",
+	    srsName: "EPSG:4326",
+	    version: "1.0.0"
+	  }),
+	  projection: map.displayProjection,
+	  strategies:[new OpenLayers.Strategy.BBOX()],
+	  visibility: false,
+	  styleMap: style_comuni
+        });
+        comuni.events.register('loadstart', this, onloadstart_poi);
+	comuni.events.register('loadend', this, function(e){
+						  $("#spinner_poi").hide();
+						});
+        var parchi = new OpenLayers.Layer.Vector("Parchi", {
+	  protocol: new OpenLayers.Protocol.WFS({
+	    url: "http://217.199.4.93/cgi-bin/lifeten",
+	    featureType: "Parchi",
+	    srsName: "EPSG:4326",
+	    version: "1.0.0"
+	  }),
+	  projection: map.displayProjection,
+	  strategies:[new OpenLayers.Strategy.BBOX()],
+	  visibility: false,
+	  styleMap: style_aree
+        });
+        parchi.events.register('loadstart', this, onloadstart_poi);
+	parchi.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+//         var parchi_fluviali = new OpenLayers.Layer.Vector("Parchi fluviali", {
+// 	  protocol: new OpenLayers.Protocol.WFS({
+// 	    url: "http://217.199.4.93/cgi-bin/lifeten",
+// 	    featureType: "Parchi_fluviali",
+// 	    srsName: "EPSG:4326",
+// 	    version: "1.0.0"
+// 	  }),
+// 	  projection: map.displayProjection,
+// 	  strategies:[new OpenLayers.Strategy.BBOX()],
+// 	  visibility: false,
+// 	  styleMap: style_aree
+//         });
+//         parchi_fluviali.events.register('loadstart', this, onloadstart_poi);
+// 	parchi_fluviali.events.register('loadend', this, function(e){
+// 							  $("#spinner_poi").hide();
+// 							});
+        var dolomiti = new OpenLayers.Layer.Vector("Dolomiti UNESCO", {
+	  protocol: new OpenLayers.Protocol.WFS({
+	    url: "http://217.199.4.93/cgi-bin/lifeten",
+	    featureType: "Dolomiti_UNESCO",
+	    srsName: "EPSG:4326",
+	    version: "1.0.0"
+	  }),
+	  projection: map.displayProjection,
+	  strategies:[new OpenLayers.Strategy.BBOX()],
+	  visibility: false,
+	  styleMap: style_dolo
+        });
+        dolomiti.events.register('loadstart', this, onloadstart_poi);
+	dolomiti.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+        var riserve = new OpenLayers.Layer.Vector("Reti di riserve", {
+	  protocol: new OpenLayers.Protocol.WFS({
+	    url: "http://217.199.4.93/cgi-bin/lifeten",
+	    featureType: "Riserve",
+	    srsName: "EPSG:4326",
+	    version: "1.0.0"
+	  }),
+	  projection: map.displayProjection,
+	  strategies:[new OpenLayers.Strategy.BBOX()],
+	  visibility: false,
+	  styleMap: style_riserve
+        });
+        riserve.events.register('loadstart', this, onloadstart_poi);
+	riserve.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+        var rete_natura = new OpenLayers.Layer.Vector("Rete Natura 2000", {
+	  protocol: new OpenLayers.Protocol.WFS({
+	    url: "http://217.199.4.93/cgi-bin/lifeten",
+	    featureType: "Rete_NATURA_2000",
+	    srsName: "EPSG:4326",
+	    version: "1.0.0"
+	  }),
+	  projection: map.displayProjection,
+	  strategies:[new OpenLayers.Strategy.BBOX()],
+	  visibility: false,
+	  styleMap: style_rete
+        });
+        rete_natura.events.register('loadstart', this, onloadstart_poi);
+	rete_natura.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+	var alta_quota_sp_focali = new OpenLayers.Layer.WMS("Numero di specie focali nelle aree di alta quota", "http://217.199.4.93/cgi-bin/lifeten_raster",
+	  {
+	    layers: "alta_quota_sp_focali",
+	    transparent: true
+	  }, {
+	    isBaseLayer: false,
+	    opacity: 0.8,
+	    visibility: false
+	  }
+	);
+	alta_quota_sp_focali.events.register('loadstart', this, onloadstart_poi);
+	alta_quota_sp_focali.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+	var conifere_sp_focali = new OpenLayers.Layer.WMS("Numero di specie focali nelle aree di boschi di conifere", "http://217.199.4.93/cgi-bin/lifeten_raster",
+	  {
+	    layers: "conifere_sp_focali",
+	    transparent: true
+	  }, {
+	    isBaseLayer: false,
+	    opacity: 0.8,
+	    visibility: false
+	  }
+	);
+	conifere_sp_focali.events.register('loadstart', this, onloadstart_poi);
+	conifere_sp_focali.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+// 	var ambienti_aperti_sp_focali = new OpenLayers.Layer.WMS("Numero di specie focali nelle aree di ambienti aperti sotto 1500 m", "http://217.199.4.93/cgi-bin/lifeten_raster",
+// 	  {
+// 	    layers: "ambienti_aperti_sp_focali",
+// 	    transparent: true
+// 	  }, {
+// 	    isBaseLayer: false,
+// 	    opacity: 0.8,
+// 	    visibility: false
+// 	  }
+// 	);
+// 	ambienti_aperti_sp_focali.events.register('loadstart', this, onloadstart_poi);
+// 	ambienti_aperti_sp_focali.events.register('loadend', this, function(e){
+// 							  $("#spinner_poi").hide();
+// 							});
+
+	var latifoglie_sp_focali = new OpenLayers.Layer.WMS("Numero di specie focali nelle aree di boschi di latifoglie", "http://217.199.4.93/cgi-bin/lifeten_raster",
+	  {
+	    layers: "latifoglie_sp_focali",
+	    transparent: true
+	  }, {
+	    isBaseLayer: false,
+	    opacity: 0.8,
+	    visibility: false
+	  }
+	);
+	latifoglie_sp_focali.events.register('loadstart', this, onloadstart_poi);
+	latifoglie_sp_focali.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+	var aree_umide_sp_focali = new OpenLayers.Layer.WMS("Numero di specie focali nelle aree umide di fondovalle", "http://217.199.4.93/cgi-bin/lifeten_raster",
+	  {
+	    layers: "aree_umide_sp_focali",
+	    transparent: true
+	  }, {
+	    isBaseLayer: false,
+	    opacity: 0.8,
+	    visibility: false
+	  }
+	);
+	aree_umide_sp_focali.events.register('loadstart', this, onloadstart_poi);
+	aree_umide_sp_focali.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+	var boschi_perifluviali_sp_focali = new OpenLayers.Layer.WMS("Numero di specie focali nelle aree di boschi perifluviali", "http://217.199.4.93/cgi-bin/lifeten_raster",
+	  {
+	    layers: "boschi_perifluviali_sp_focali",
+	    transparent: true
+	  }, {
+	    isBaseLayer: false,
+	    opacity: 0.8,
+	    visibility: false
+	  }
+	);
+	boschi_perifluviali_sp_focali.events.register('loadstart', this, onloadstart_poi);
+	boschi_perifluviali_sp_focali.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+	var rocce_sp_focali = new OpenLayers.Layer.WMS("Numero di specie focali nelle aree di pareti rocciose sotto i 1500 m", "http://217.199.4.93/cgi-bin/lifeten_raster",
+	  {
+	    layers: "rocce_sp_focali",
+	    transparent: true
+	  }, {
+	    isBaseLayer: false,
+	    opacity: 0.8,
+	    visibility: false
+	  }
+	);
+	rocce_sp_focali.events.register('loadstart', this, onloadstart_poi);
+	rocce_sp_focali.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+	var colture_arboree_sp_focali = new OpenLayers.Layer.WMS("Numero di specie focali nelle aree di colture arboree", "http://217.199.4.93/cgi-bin/lifeten_raster",
+	  {
+	    layers: "colture_arboree_sp_focali",
+	    transparent: true
+	  }, {
+	    isBaseLayer: false,
+	    opacity: 0.8,
+	    visibility: false
+	  }
+	);
+	colture_arboree_sp_focali.events.register('loadstart', this, onloadstart_poi);
+	colture_arboree_sp_focali.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+	var ricchezza = new OpenLayers.Layer.WMS("Ricchezza relativa della biodiversità faunistica trentino", "http://217.199.4.93/cgi-bin/lifeten_raster",
+	  {
+	    layers: "ricchezza",
+	    transparent: true
+	  }, {
+	    isBaseLayer: false,
+	    opacity: 0.8,
+	    visibility: false
+	  }
+	);
+	ricchezza.events.register('loadstart', this, onloadstart_poi);
+	ricchezza.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+	var hotspots = new OpenLayers.Layer.WMS("Zone contigue ad elevata biodiversità maggiori di 200 ettari", "http://217.199.4.93/cgi-bin/lifeten_raster",
+	  {
+	    layers: "hotspots",
+	    transparent: true
+	  }, {
+	    isBaseLayer: false,
+	    opacity: 0.8,
+	    visibility: false
+	  }
+	);
+	hotspots.events.register('loadstart', this, onloadstart_poi);
+	hotspots.events.register('loadend', this, function(e){
+							  $("#spinner_poi").hide();
+							});
+
+	map.addLayers([mapnik, provincia, comuni, comunita, parchi, rete_natura, dolomiti, riserve, alta_quota_sp_focali, conifere_sp_focali, latifoglie_sp_focali, aree_umide_sp_focali, boschi_perifluviali_sp_focali, rocce_sp_focali, colture_arboree_sp_focali, ricchezza, hotspots]);
+	if (sessvars.area_global != null){
+	  bound = OpenLayers.Bounds.fromString(sessvars.area_global);
+	  map.zoomToExtent(bound);
+	} else {
+	  //Centro la mappa sull'extent definito in precedenza
+	  map.zoomToExtent(map.maxExtent);
+	}
+	//create select control for all layers
+	selectControl = new OpenLayers.Control.SelectFeature(
+	  [],
+	  {
+	    clickout: true, toggle: true,
+	    multiple: false, hover: false
+	  }
+	);
+	map.addControl(selectControl);
+	$('#spinner_poi').css('top', pagesize[3]/2);
+	$('#spinner_poi').css('left', pagesize[2]/4);
+	$('#spinner_poi').append('<img src="{{ STATIC_URL }}icons/spinner.gif" alt="Caricamento..." />');
+	$('#spinner_poi').hide();
+	$('#spinner_poly').css('top', pagesize[3]/2);
+	$('#spinner_poly').css('left', pagesize[2]/4);
+	$('#spinner_poly').append('<img src="{{ STATIC_URL }}icons/spinner.gif" alt="Caricamento..." />');
+	$('#spinner_poly').hide();
+// 	$('#layerswitcher').append('<br /><div id="removelayer" class="right"> <select id="remove" onchange="javascript:removeLayer();"><option value="" selected="selected">Rimuovi un layer</option></select></div>');
+	$('#logofooter img').each(function(index) {
+	  $(this).css('width', pagesize[2]/10);
+	});
+	sessvars.$.clearMem();
+	nLayers = map.getLayersByClass("OpenLayers.Layer.Vector").length + 1
+     }

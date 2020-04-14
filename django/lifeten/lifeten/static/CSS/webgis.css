@@ -1,0 +1,124 @@
+  html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	background-repeat: no-repeat;
+  	}
+  
+#map {
+	top: 0px;
+	width: 70%;
+	margin-top: 0px;
+	float: left;
+	z-index: 1;
+	vertical-align: top;             
+ 	}       
+       
+/* OpenLayers controls for mouse coordinates */       
+div.olControlMousePosition {
+	bottom: 4em;
+    font-family: Verdana !important;
+    font-size: .8em !important;
+    color: blue;
+    background-color: rgba(255, 255, 255, 0.9);
+     /* Opacity controls, ALL browsers for compatibility */
+    /* filter: alpha(opacity=90); 
+    /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";       /* IE 8 */
+	/* filter: alpha(opacity=50);  /* IE 5-7 */
+	/* -moz-opacity: 0.5;          /* Netscape */
+	/* -khtml-opacity: 0.5;        /* Safari 1.x */
+	/* opacity: 0.5;               /* Good browsers */
+	border-style:solid;
+	border-width:1px;
+}
+
+/* OpenLayers control for visualization of scale */
+div.olControlScale {
+    font-family: Verdana !important;
+    font-size: .8em !important;
+    color: blue;
+    background-color: rgba(255, 255, 255, 0.9);
+    filter: alpha(opacity=90); 
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";       /* IE 8 */
+	filter: alpha(opacity=50);  /* IE 5-7 */
+	-moz-opacity: 0.5;          /* Netscape */
+	-khtml-opacity: 0.5;        /* Safari 1.x */
+	opacity: 0.5;               /* Good browsers */
+	border-style:solid;
+	border-width:1px;
+}
+
+/* Scale is visible only on hover */
+div.olControlScale:hover {
+    filter: alpha(opacity=100); 
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";       /* IE 8 */
+	filter: alpha(opacity=100);  /* IE 5-7 */
+	-moz-opacity: 1;          /* Netscape */
+	-khtml-opacity: 1;        /* Safari 1.x */
+	opacity: 1;               /* Good browsers */    	
+}
+
+div.olControlNavToolbar {
+    filter: alpha(opacity=100); 
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";       /* IE 8 */
+	filter: alpha(opacity=100);  /* IE 5-7 */
+	-moz-opacity: 1;          /* Netscape */
+	-khtml-opacity: 1;        /* Safari 1.x */
+	opacity: 1;               /* Good browsers */    
+	top: 4em;
+	left: 3px;	
+}
+        
+
+#accordion{
+	width: 100%;
+  	}
+
+.footer {
+	position: bottom;
+	}
+
+#spinner_poi {
+	position:absolute;
+	z-index:3000;
+}
+
+.ui-state-hover{
+	color:	#FFCC00;
+}
+
+.ui-state-focus{
+	color: yellow;
+}
+
+
+.showmaps {
+	background-image: url("{{ STATIC_URL }}icons/select.png") !important;
+ 	width: 20px;
+ 	height: 20px; 
+}
+
+.hidemaps {
+	background-image: url("{{ STATIC_URL }}icons/unselect.png") !important;
+	width: 20px;
+	height: 20px; 
+}
+
+.removemaps {
+	background-image: url("{{ STATIC_URL }}icons/remove.png") !important;
+	width: 20px;
+	height: 20px; 
+}
+
+.ui-dialog {
+	z-index: 5000;
+}
+
+#output-id {
+	margin: 10px 250px;
+}
+
+tbody {
+    overflow-y: auto;    /* Trigger vertical scroll    */
+    overflow-x: hidden;  /* Hide the horizontal scroll */
+}

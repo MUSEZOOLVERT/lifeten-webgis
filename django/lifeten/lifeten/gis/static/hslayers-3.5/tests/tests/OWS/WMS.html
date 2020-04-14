@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="/wwwlibs/ext/ext3/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="/wwwlibs/ext/ext3/ext-all.js"></script>
+  <script type="text/javascript" src="../../../build/OpenLayers-debug.js"></script>
+  <script type="text/javascript" src="/wwwlibs/proj4js/proj4js.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Util.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/OWS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/WMS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/OWS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/OWS/WMS.js"></script>
+  <script type="text/javascript" src="../../HSLTest.js"></script>
+
+  <title>Testing HSLayers.Layer.SearchParser</title>
+  <script type="text/javascript">
+
+    var wms;
+    var map;
+    var t;
+
+    function test_01(test) {
+        t = test;
+        t.plan(19);
+
+        map = new OpenLayers.Map("map",{projection: new OpenLayers.Projection("epsg:4326")});
+        map.addLayer(new OpenLayers.Layer.WMS("base",
+                    "http://labs.metacarta.com/wms-c/Basic.py",
+                    {LAYERS:"basic",
+                    FORMAT:"image/png"}));
+
+        // create wms parser
+        wms = new HSLayers.OWS.WMS({
+                renderTo:Ext.get("wms"),
+                map:map
+        });
+        wms.on("capabilitiesparsed",run_after_getCapabilities_1_1_1, this);
+
+        wms.connect(window.location.href.replace("WMS.html","")+"../../data/wms-1.1.1-capabilities.xml");
+
+
+        t.wait_result(3);
+    };
+
+    function run_after_getCapabilities_1_1_1(e) {
+
+            // check Service properties
+            check("TopoCR-HSRS",wms.title,"title match");
+            check("Podkladova topograficka mapa Ceske republiky stredniho meritka. Vytvoreno na podklade druzicovych a leteckych snimku. HelpService Remote Sensing, s.r.o 2003.",
+                    wms.description,"description match");
+            check("1.1.1",wms.version,"version match");
+            check(7,wms.imageFormats.length,"found all image formats");
+            check(2,wms.queryFormats.length,"found all query formats");
+            check(3,wms.exceptions.length,"found all exception formats");
+            check(true,
+                wms.srss["epsg:3035"] &&
+                wms.srss["epsg:3045"] &&
+                wms.srss["epsg:4126"] &&
+                wms.srss["epsg:4326"] &&
+                wms.srss["epsg:28403"] &&
+                wms.srss["epsg:32633"] &&
+                wms.srss["epsg:32634"] &&
+                wms.srss["epsg:102067"] &&
+                wms.srss["epsg:900913"], "found all srss");
+            check("http://gis.bnhelp.cz/ows/crtopo?",wms.getMapUrl.href,"get map url match")
+            check(28,wms.capabilities.capability.layers.length, "number of layers match")
+
+
+            // add layer to map and check layer properties
+            var layer = wms.services[0].nestedLayers[1];
+            //          (layer, layerName, imageFormat,queryFormat,style,singleTile, tileSize, crs) 
+            wms.addLayer(layer,"wms",
+                    "image/png","text/plain","default",false,
+                    new OpenLayers.Size(100,100),
+                    "epsg:4326");
+            var maplayer  = map.layers[map.layers.length-1];
+            check("wms",maplayer.name,"layer added");
+            check(true,!(!maplayer.metadataURL.href),"layer has metadata");
+            check(true,maplayer.metadata.styles[0].legend.href.length>0,"layer has legend");
+
+            wms.addLayer(layer,"wms 3","undefined","image/png","text/plain",false,new OpenLayers.Size(100,100),"epsg:4326");
+            maplayer  = map.layers[map.layers.length-1];
+            check(false,maplayer.singleTile,"singleTile");
+            check(100,maplayer.tileSize.w,"tilesize1");
+            check(100,maplayer.tileSize.h,"tilesize2");
+            console.log(maplayer);
+            check("text/plain",maplayer.params.INFO_FORMAT,"has info_format");
+            check(true,maplayer.queryable,"is queryable");
+            check(true,maplayer.saveWMC,"save WMC true");
+
+            wms.addLayer(layer,"wms 2", "image/png","text/plain","default",false, undefined,"epsg:102067");
+            maplayer  = map.layers[map.layers.length-1];
+            check(false,maplayer.singleTile,"singleTile");
+
+            // try to add layer which is already in the map
+
+            // click on "Connect" button
+            // wms.urlTextField.setValue(window.location.href.replace("wms-parser-01.html","")+"data/wms2.xml");
+            // wms.onGetCapabilitiesClicked();
+            // wms.on("capabilitiesparsed",parseWMS2, this);
+
+
+    };
+
+    function parseWMS2(e) {
+            check();
+            check("TopoCR-HSRS",wms.title,"title match");
+
+            //wms.urlTextField.setValue(window.location.href.replace("wms-parser-01.html","")+"data/wms3.xml");
+            //wms.onGetCapabilitiesClicked();
+            //wms.on("capabilitiesparsed",parseWMS3, this);
+    }
+
+    //function parseWMS3(e) {
+    //}
+
+    function check(expected, real,description) {
+        t.eq(expected,real,description);
+    }
+
+
+  </script>
+</head>
+<body>
+    <div id="map" style="width:2000; height: 2000; display: none"></div>
+    <div id="wms" style=""></div>
+</body>
+</html>

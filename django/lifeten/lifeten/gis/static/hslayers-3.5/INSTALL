@@ -1,0 +1,18 @@
+# Installation INSTRUCTIONS
+mkdir build && cd build
+# Here we have various variables at our disposal:
+#   WWWLIBS_INSTALL_PREFIX - path to /var/www/ or any other web root folder
+#	HSLAYERS_WEBSERVER_PREFIX - path for the hslayers on the webserver /hslayers/version/
+#		The above variables get folded into full install path /var/www/hslayers/version/
+#		This behavior can be ultimately overriden by variable HSLAYERS_INSTALL_PREFIX
+#		which overrides install path, does not affect the WEBSERVER prefix.
+#		Overriding this variable is useful when you use symlinks and want to place
+#		hslayers installation elsewhere than it might seem in the end.
+# Remember. All variables are used as -DVARIABLE=VALUE.
+# If you dont like the commandline interface substitute cmake with ccmake or
+# cmake-gui command, where you can just click all the variables in :]
+
+cmake .. -DHSLAYERS_WEBSERVER_PREFIX="/hlayers/testing/"
+make
+make install
+

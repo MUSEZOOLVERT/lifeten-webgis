@@ -1,0 +1,754 @@
+div.olControlOverviewMapElement {
+    background: none;
+    background: url('img/overview_background.png') no-repeat 0px 0px;
+    -moz-border-radius-topleft:0em;
+    background-color: #ffffff;
+    padding: 7px 0px 0px 7px;
+}
+div.olControlOverviewMapMinimizeButton {
+    bottom: 0px;
+}
+div.olControlOverviewMapMaximizeButton {
+    bottom: 0px;
+}
+
+
+.hsControlPanel {
+    width: 300px;
+    height: 30px;
+    position: absolute;
+    top: 10px;
+    left: 80px;
+    text-align: right;
+}
+.hsControlPanel div,.HSLayersControlEditing div {
+          width:  24px;  
+          height: 22px;
+          float: left;
+          margin-right:5px;
+	  cursor: pointer;
+      }
+
+.hsControlQueryPointItemInactive { 
+          background-image: url("img/query_point_off.png");
+    }
+
+.hsControlQueryPointItemActive { 
+          background-image: url("img/query_point_on.png");
+    }
+
+.HSLayersControlUserGraphicsItemInactive {
+    background-image: url("img/measure_line_off.png");
+}
+.HSLayersControlUserGraphicsItemActive {
+    background-image: url("img/measure_line_on.png");
+}
+
+.hsControlQueryPolygonItemInactive { 
+          background-image: url("img/query_polygon_off.png");
+    }
+
+.hsControlQueryPolygonItemActive { 
+          background-image: url("img/query_polygon_on.png");
+    }
+
+.hsControlQueryBoxItemInactive { 
+          background-image: url("img/query_box_off.png");
+    }
+
+.hsControlQueryBoxItemActive { 
+          background-image: url("img/query_box_on.png");
+    }
+
+.HSLayersControlQueryItemInactive, .hsControlQueryItemInactive{ 
+          background-image: url("img/query_point_off.png");
+    }
+
+.HSLayersControlQueryItemActive, .hsControlQueryItemActive { 
+          background-image: url("img/query_point_on.png");
+    }
+
+.olControlHSMapServerQueryItemInactive{ 
+          background-image: url("img/query_point_off.png");
+    }
+
+.olControlHSMapServerQueryItemActive { 
+          background-image: url("img/query_point_on.png");
+    }
+
+.hsControlPanel .olControlNavigationItemActive,.HSLayersControlEditing .olControlNavigationItemActive  { 
+  background-image: url("img/pan_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .olControlNavigationItemInactive,.HSLayersControlEditing .olControlNavigationItemInactive {  
+  background-image: url("img/pan_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlDrawBoxItemInactive,.HSLayersControlEditing .hsControlDrawBoxItemInactive { 
+  background-image: url("img/draw_box_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlDrawBoxItemActive,.HSLayersControlEditing .hsControlDrawBoxItemActive { 
+  background-image: url("img/draw_box_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlDrawPolygonItemInactive,.HSLayersControlEditing .hsControlDrawPolygonItemInactive { 
+  background-image: url("img/draw_polygon_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlDrawPolygonItemActive,.HSLayersControlEditing .hsControlDrawPolygonItemActive { 
+  background-image: url("img/draw_polygon_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlZoomToBoxItemActive { 
+  background-image: url("img/zoom_to_box_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlZoomToBoxItemInactive { 
+  background-image: url("img/zoom_to_box_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlSeparatorItemInactive { 
+  background-image: url("img/separator.png");
+  background-repeat: no-repeat;
+  width:  10px;  
+  margin-right:0px;
+}
+
+.hsControlPanel .hsControlMarkerItemActive { 
+  background-image: url("img/draw_marker_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlMarkerItemInactive { 
+  background-image: url("img/draw_marker_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsHelpDiv {
+    border: 1px solid black;
+    background-color: #ffff99;
+    padding: 1px;
+}
+
+.olControlLayerSwitcher {
+    position: absolute;
+    right: 0px;
+    top: 25px;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+    font-size: smaller;   
+    color: white;   
+    background-color: transparent;
+}
+#olLayersDiv {
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    padding-right: 75px;
+    background-color: none;        
+    width: 100%;
+    height: 100%;
+}
+
+.olControlLayerSwitcher .olLayersLabel {
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+    text-decoration: underline;
+    color: white;
+}
+
+.olControlLayerSwitcher .olDataOrBaseLayersDiv {
+    padding-left: 10px;
+}
+
+.olControlLayerSwitcher .olLayerGroup {
+    margin-left:10px;
+    margin-bottom:5px;
+}
+
+.olControlLayerSwitcher .olGroupLabel {
+    text-decoration: underline;
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+.olMarkerLabel {
+    font-size: small;
+    color: white;
+    background-color: darkblue;
+    width: auto;
+    padding: 1px;
+    border: 1px white solid;
+    opacity: 0.7;
+    filter:alpha(opacity=70);
+    z-index: 10000;
+    position: absolute;
+}
+.hsControlPanel .hsControlDrawFeaturePathItemInactive,.HSLayersControlEditing .hsControlDrawFeaturePathItemInactive { 
+  background-image: url("img/draw_line_off.png");
+  background-repeat: no-repeat;
+}
+.hsControlPanel .hsControlDrawFeaturePathItemActive,.HSLayersControlEditing .hsControlDrawFeaturePathItemActive { 
+  background-image: url("img/draw_line_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlDrawFeaturePolygonItemInactive,.HSLayersControlEditing .hsControlDrawFeaturePolygonItemInactive { 
+  background-image: url("img/draw_polygon_off.png");
+  background-repeat: no-repeat;
+}
+.hsControlPanel .hsControlDrawFeaturePolygonItemActive,.HSLayersControlEditing .hsControlDrawFeaturePolygonItemActive { 
+  background-image: url("img/draw_polygon_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlDrawFeaturePointItemInactive { 
+  background-image: url("img/draw_point_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlDrawFeaturePointItemActive { 
+  background-image: url("img/draw_point_on.png");
+  background-repeat: no-repeat;
+}
+
+.HSLayersControlEditing .hsControlDrawFeaturePointItemInactive { 
+  background-image: url("img/draw_marker_off.png");
+  background-repeat: no-repeat;
+}
+
+.HSLayersControlEditing .hsControlDrawFeaturePointItemActive { 
+  background-image: url("img/draw_marker_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlModifyFeatureItemInactive, .HSLayersControlEditing .hsControlModifyFeatureItemInactive { 
+  background-image: url("img/modify_feature_off.png");
+  background-repeat: no-repeat;
+}
+.hsControlPanel .hsControlModifyFeatureItemActive, .HSLayersControlEditing .hsControlModifyFeatureItemActive { 
+  background-image: url("img/modify_feature_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlDragFeatureItemInactive, .HSLayersControlEditing .hsControlDragFeatureItemInactive { 
+  background-image: url("img/move_feature_off.png");
+  background-repeat: no-repeat;
+}
+.hsControlPanel .hsControlDragFeatureItemActive, .HSLayersControlEditing .hsControlDragFeatureItemActive { 
+  background-image: url("img/move_feature_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlInfoItemInactive { 
+  background-image: url("img/query_point_off.png");
+  background-repeat: no-repeat;
+}
+.hsControlPanel .hsControlInfoItemActive { 
+  background-image: url("img/query_point_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlMeasureLineItemInactive { 
+  background-image: url("img/measure_line_off.png");
+  background-repeat: no-repeat;
+}
+.hsControlPanel .hsControlMeasureLineItemActive { 
+  background-image: url("img/measure_line_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlMeasureAreaItemInactive { 
+  background-image: url("img/measure_area_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlMeasureAreaItemActive { 
+  background-image: url("img/measure_area_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlPrinterItemInactive { 
+  background-image: url("img/printer_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlPrinterItemActive { 
+  background-image: url("img/printer_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlWMSItemInactive { 
+  background-image: url("img/add_wms.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlWMSItemActive { 
+  background-image: url("img/add_wms.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlWFSItemInactive { 
+  background-image: url("img/add_wfs.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlLayerItemInactive { 
+  background-image: url("img/add_layer.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlWFSItemActive { 
+  background-image: url("img/add_wfs.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlAddPinItemInactive { 
+  background-image: url("img/addPin_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlAddPinItemActive { 
+  background-image: url("img/addPin_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlHSCuzkItemInactive { 
+  background-image: url("img/cuzk_off.png");
+  background-repeat: no-repeat;
+}
+
+.hsControlPanel .hsControlHSCuzkItemActive { 
+  background-image: url("img/cuzk_on.png");
+  background-repeat: no-repeat;
+}
+
+.hsLayerIcon img{
+    padding:0px;
+    margin: 0px;
+    padding-left: 10px;
+}
+
+.olControlNavigationHistoryPreviousItemInactive {
+    background-position:0 -26px;
+}
+.olControlNavigationHistoryNextItemInactive {
+    background-position:-24px -26px;
+}
+
+.olControlNavigationHistoryPreviousItemActive {
+    background-position:0 -0px;
+}
+
+.olControlNavigationHistoryNextItemActive {
+    background-position:-24px -0px;
+}
+
+.olControlEditingToolbar .hslAttributeTableItemActive { 
+          background-image: url("img/attribute_table_on.png");
+    }
+.olControlEditingToolbar .hslAttributeTableItemInactive { 
+          background-image: url("img/attribute_table_off.png");
+    }
+
+/* legendy v prepinaci vrstev */ 
+.olLayerSwitcher .x-tree-node-collapsed .x-tree-node-icon, .olLayerSwitcher .x-tree-node-expanded .x-tree-node-icon, .olLayerSwitcher .x-tree-node-leaf .x-tree-node-icon {
+    width: auto;
+    height: auto;
+}
+
+.HSLayersControlBoxLayerSwitcher {
+    font-size:13px; 
+    top:10px; 
+    right:10px; 
+    width:250px; 
+    height:200px; 
+    filter:alpha(opacity=85);
+    -moz-opacity:0.85;
+    opacity: 0.85;
+}
+
+.HSLayersControlBoxLayerSwitcher .olGroupInactive {
+    text-align:center; 
+    background:#EEEEEE url(img/tab-strip-bg.gif); 
+    padding: 2px; 
+    margin:1px; 
+    border: 1px #E0E0E0 solid;
+}
+
+.HSLayersControlBoxLayerSwitcher .olGroupActive {
+    text-align:center;
+    background:#EEEEEE;
+    padding: 2px;
+    margin:1px;
+    border: 1px white inset;
+}
+.HSLayersControlBoxLayerSwitcher .olSublayerActive {
+    background:#F8F8F8 url(img/checked.gif);
+    background-position: 2px 0px;
+    background-repeat:no-repeat;
+    margin-top:1px;
+    padding:2px;
+    padding-left: 18px;
+    border: 1px #E0E0E0 solid;
+}
+.HSLayersControlBoxLayerSwitcher .olSublayerInactive {
+    background:#F8F8F8 url(img/unchecked.gif);
+    background-position: 2px 0px;
+    background-repeat:no-repeat;
+    margin-top:1px;
+    padding:2px;
+    padding-left: 18px;
+    border: 1px #E0E0E0 solid;
+}
+
+.disabledNode {
+    /*background: #eee;*/
+}
+.disabledNode a span {
+    color: #999;
+}
+
+.LayerSwitcherGroupNode a:hover {
+    text-decoration: underline;
+}
+
+.HSLayersControlEditing {
+    width: 200px;
+    height: 30px;
+    position: absolute;
+    top: 50px;
+    left: 80px;
+    text-align: right;
+}
+
+/* editing */
+.hs-edit-edit {
+	background: url("img/edit.png") no-repeat;
+	padding-left:16px; 
+	height: 16px;
+	display: inline-block;
+}
+.hs-edit-delete {
+	background: url("img/delete.png") no-repeat;
+	padding-left:16px; 
+	height: 16px;
+	display: inline-block;
+  	margin-left:3px;
+}
+
+.hs-edit-msg {
+  padding: 10px 10px 10px 42px;
+  margin: 10px 20px 10px 20px;
+  background: url(img/ok.png) no-repeat #FEFEFE;
+  color: #000000;
+  font-weight: bold;
+}
+
+.hs-edit-header {
+		font-weight: bold; 
+		text-align: center;
+		padding: 5px; 
+}
+
+.hs-edit-form {
+  padding: 3px;
+  background: #EEEEEE;
+  font-size: 12px;
+  padding-top: 8px;
+}
+
+/*jmena poli*/
+.odp_pole {background-color: #EFEFEF; font-style: italic; width: 40%}
+
+/*hodnoty*/
+.odp_hodn {}
+
+/*tabulka s odpovedi - mrizka*/
+.odp_tab  {
+	font-family: arial,tahoma,helvetica,sans-serif;
+	font-size: 11px;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.odp_tab td {
+  padding:3px;
+	border:solid 1px #E0E0E0;
+	vertical-align: top;
+}
+
+.odp_tab th {
+	background: #F9F9F9 url(img/grid3-hrow.gif) repeat-x scroll 0 bottom;
+	cursor: default;
+	font-weight: bold; 
+	vertical-align: top;
+	line-height: 25px;  padding: 3px;
+}
+
+.hs-query-editbar{
+  float: right;
+}
+
+/* geo microformat*/
+span.geo {display:none}
+
+.olPopup {
+    font-family: sans-serif;
+    font-size: 10pt;
+}
+
+.olPopup .menuDiv .popupMenuItem {
+        display: inline;
+        margin-right: 3px;
+        padding-left: 3px;
+}
+
+.olPopup .menuDiv .firstMenuItem{
+        border-left: none;
+}
+
+.hsPopupContent {
+    overflow: auto;
+    left: 8px;
+    /*
+    border-top: dotted 1px #999;
+    border-bottom: dotted 1px #999;
+    */
+}
+
+.olPopup .popupTitle {
+        z-index : 1;
+}
+
+.olPopup .popupTitle {
+    top : 8px;
+    left : 8px;
+}
+
+.olPopup .infoDiv, .menuDiv {
+        z-index : 1;
+        bottom : 40px;
+        right : 8px;
+        border-top: dotted 1px #999;
+}
+
+.olPopup .menuDiv {
+    left: 8px;
+    right: none;
+}
+
+
+.olPopup .popupTitle {
+    font-size: 12pt;
+    font-weight: bold;
+    /* color: #999; */
+}
+
+.olPopup .popupMenuList {
+    margin: 0px;
+    padding: 0px;
+}
+
+.x-view-over {
+    background-color:#eee;
+}
+
+.x-view-selected {
+    background-color:#dfe8f6;
+}
+
+.HSLayersControlAttribution {
+    right: 3px; 
+    bottom: 4.5em; 
+    position: absolute; 
+    display: block;
+}
+
+/*
+.HSLayersControlAttribution_window dl {
+}
+
+.HSLayersControlAttribution_window dl dt {
+    border-top: 1px dotted #ccc;
+    font-weight: bold;
+}
+.HSLayersControlAttribution_window dl dd {
+}
+
+.HSLayersControlAttribution_window dl dt.even,
+.HSLayersControlAttribution_window dl dd.even {
+    background: #eee;
+}
+*/
+
+.HSLayersControlAttribution_window .hslCopyrightLink {
+    padding: 5px;
+    float:left;
+    /* max-width: 150px; */
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.HSLayersControlAttribution_window .copyrightDiv {
+    display: table;
+}
+
+img.add-button {
+    width: 17px;
+    height: 21px;
+    background: url("img/add.png") no-repeat;
+}
+
+img.remove-button {
+    width: 17px;
+    height: 21px;
+    background: url("img/delete.gif") no-repeat;
+}
+
+.x-tree-node .x-tree-node-over {
+    background-image: url("img/delete.gif") no-repeat;
+}
+
+div.HSLayersControlPanZoomBar  {
+	cursor: pointer;
+}
+
+div.HSLayersControlPanZoomBar  div.dummyScaleLabel{
+        vertical-align: bottom;
+        color: #fff;
+        font-size: 8pt;
+        font-family: sans-serif;
+        font-weight: bold;
+        text-align: center;
+        padding-top: 2px;
+        background-position: center;
+        background-image: url("img/hsl-dummy_scale.png");
+}
+
+div.HSLayersControlPanZoomBar  div.dummyScaleLabel a{
+        color: #fff;
+        text-decoration: none;
+}
+
+div.HSLayersControlPanZoomBar div.dummyScaleDivBackground {
+    background: url("img/zoombar_bg.png") repeat-y;
+    color: #fff;
+}
+
+.x-tree-node-settings {
+        margin-left: -20px;
+        float:right;
+        display: none;
+}
+
+.x-tree-node-over .x-tree-node-settings {
+        display: block;
+        cursor: pointer;
+}
+
+.x-tree-node-el {
+    cursor: default;
+}
+
+.x-tool-popup {
+    background-image: url("img/popup-tool.png");
+}
+
+.x-tree-node .notinscale a span {
+    color: #ccc;
+}
+
+.metadata dt {
+    font-weight: bold;
+}
+
+.body-wrap {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	color: #222;
+	background-color:#FFFFFF;
+	margin: 0px;
+	padding: 10px;
+        position:relative;
+	width:95%;
+        font-size: 13px;
+}
+
+a.hsLayers-attribution-link {
+    vertical-align: top;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.x-form-field-wrap .x-form-color-trigger {
+	background:transparent url(img/color-trigger.gif) no-repeat 0 0;
+    cursor:pointer; 
+}
+
+.row-notintime {
+    color: #ccc;
+}
+
+
+/*
+ * Copyright (c) <2011> <Ryan Petrello>
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+.x-color-picker, .x-color-picker {
+  height: 195px;
+  position: relative;
+  overflow: hidden;
+}
+.x-color-picker div canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+.x-color-picker-wheel {
+  z-index: 1;
+}
+.x-color-picker-gradient  {
+  z-index: 0;
+}
+/* END OF COLOR PICKER */
+
+.context-summary dt {
+    font-weight: bold;
+}
+.context-summary dd {
+    margin-left: 30px;
+}

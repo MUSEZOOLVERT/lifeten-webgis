@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+  <script type="text/javascript" src="/wwwlibs/ext/ext3/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="/wwwlibs/ext/ext3/ext-all-debug.js"></script>
+    <script type="text/javascript" src="../../../build/OpenLayers-debug.js"></script>
+    <script type="text/javascript" src="../../../source/HSLayers.js"></script>
+    <script type="text/javascript" src="../../../source/HSLayers/Util.js"></script>
+    <script type="text/javascript" src="../../../source/HSLayers/Format/PrinterContext.js"></script>
+  <script type="text/javascript" src="../../HSLTest.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/OWS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/OWS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/WMS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/WCS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/WFS.js"></script>
+    <script type="text/javascript" src="/wwwlibs/proj4js/proj4js.js"></script>
+
+    <title>Testing HSLayers.Format.PrinterContext</title>
+    <script type="text/javascript">
+
+    var map;
+    var test;
+
+    function test_case(t) {
+
+        OpenLayers.ProxyHost = "/cgi-bin/olproxy.cgi?url=";
+
+        test = t;
+        t.plan(10);
+
+        map = new OpenLayers.Map("map", HSLayers.Util.getProjectionOptions("epsg:102067",1000000,500));
+
+        var wmsLayer = new OpenLayers.Layer.WMS("Lesy",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'les'},
+                    {
+                        attribution: "Never use this data &copy;",
+                        metadata: {
+                            styles: [{
+                                legend: {
+                                    href: "http://foo/bar.jpg",
+                                    format: "image/jpeg"
+                                }
+                            }]
+                        }
+                    }
+                );
+
+        var wmsLayer2 = new OpenLayers.Layer.WMS("Lesy 2",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'dem_color'},
+                    {
+                        isBaseLayer: false,
+                        visibility: true,
+                        attribution: {
+                            href: "http://foo/bar",
+                            title: "Foo bar",
+                            logo: {
+                                format: "image/gif",
+                                height: 42,
+                                width: 110,
+                                href: "http://www.kraj-lbc.cz/_templates/kraj/images/logo.gif"
+                            }
+                        },
+
+                        metadata: {
+                            styles: [{
+                                name: "default",
+                                current: true,
+                                legend:  {
+                                        format: "image/gif",
+                                        height:15,
+                                        width: 25,
+                                        href: "http://bnhelp.netart.cz/cgi-bin/crtopo?mode=legend&layer=dem_color"
+                                }
+                            }]
+                        }
+                    }
+                );
+
+        var wmsHSLayer = new HSLayers.Layer.WMS("WMS",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'okresy'},
+                    {
+                        isBaseLayer: false,
+                        visibility: true
+                    }
+                );
+
+        var wmsHSLayerWarped = new HSLayers.Layer.WMS("WMS",
+                    "http://bnhelp.cz/ows/crtopo",
+                    {layers: 'okresy'},
+                    {
+                        isBaseLayer: false,
+                        projection: new OpenLayers.Projection("epsg:4326"),
+                        visibility: true
+                    }
+                );
+
+        var wfsLayer = new HSLayers.Layer.WFS("WFS",
+                    "http://bnhelp.cz/ows/crwfs",
+                    {layers: 'okresy'},
+                    {
+                        isBaseLayer: false,
+                        visibility: true
+                    }
+                );
+
+        map.addLayer(wmsLayer);
+        map.addLayer(wmsLayer2);
+        map.addLayer(wmsHSLayer);
+        map.addLayer(wmsHSLayerWarped);
+        map.addLayer(wfsLayer);
+        map.zoomToMaxExtent();
+        map.zoomTo(4);
+        var bounds = this.map.maxExtent;
+
+        var format = new HSLayers.Format.PrinterContext();
+        t.ok(format instanceof HSLayers.Format.PrinterContext,"There is PrinterContext");
+
+        format.setBounds(bounds);
+        t.ok(format.bounds == bounds, "Bounds are the same");
+
+        var lyrContext = format.layerGridToContext(wmsLayer);
+        t.eq(lyrContext.name, wmsLayer.name,"Name of the layer fits");
+        t.eq(lyrContext.attribution, wmsLayer.attribution,"Attribution fits");
+        t.eq(lyrContext.grid.length, 5,"Grid length fits");
+
+        var lyrContext2 = format.layerWMSToContext(wmsLayer2);
+        t.eq(lyrContext2.attribution.href, wmsLayer2.attribution.href);
+        t.eq(lyrContext2.legend.format, wmsLayer2.metadata.styles[0].legend.format);
+        
+        // hsl.layer.wms
+        var hslwms = format.layerWMSToContext(wmsHSLayer);
+        t.eq(hslwms.url, wmsHSLayer.url,"HSL.Layer.WMS url points to original service");
+
+        // hsl.layer.wmswarped
+        var hslwmsw = format.layerHSWMSToContext(wmsHSLayerWarped);
+        t.eq(hslwmsw.url, "http://localhost"+HSLayers.OWS.proxy4ows, "HSL.Layer.WMS uses proxy4ows, becaue of different projection");
+
+        var out = format.write(map,"a4",true);
+
+        t.ok(typeof (out) == 'string');
+
+        var json = new OpenLayers.Format.JSON();
+        var context = json.read(out);
+
+    };
+
+
+  </script>
+</head>
+<body>
+    <div id="map" style="width: 1024px; height: 1024px;"></div>
+</body>
+</html>

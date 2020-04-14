@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="/wwwlibs/ext/ext3/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="/wwwlibs/ext/ext3/ext-all-debug.js"></script>
+  <script type="text/javascript" src="../../../build/OpenLayers-debug.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Util.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Format/Context.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Format/WMC.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Format/WMC/v1_1_0.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/OWS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/OWS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/WMS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/WCS.js"></script>
+  <script type="text/javascript" src="../../../source/HSLayers/Layer/WFS.js"></script>
+  <script type="text/javascript" src="../../HSLTest.js"></script>
+
+  <title>Testing HSLayers.Format.WMC</title>
+  <script type="text/javascript">
+
+    /* 
+        Tests for HSLayers.Format.WMC & HSLayers.Format.WMC.v1_1_0
+        
+        Implementation notes: 
+
+            - Test functions must be mutually independent, 
+              Firefox tends to reverse the execution order.
+
+            - Avoid "var test_xx = function(t)" notation,
+              it is not recognised as a test function in Chromium & IE.
+     */
+
+    var test;
+    var format;
+    var map;
+    var now = new Date();
+    var xmlResult;
+    var layer,layer2,layer3,layer4, layer5;
+    var legend = {format: "image/png", href:"http://foo/bar?legend"};
+    var abstract = "bla bla bla";
+    var metadataURL = {
+               format:"text/plain",
+               href:"http://foo/bar?metadata",
+               type:"TYPE"
+    };
+    var attrib = {
+        title: "Volcano portal",
+        logo: {
+            width: "100",
+            height: "40",
+            format: "img/png",
+            href: "http://volcano.net/img/logo.png"
+        },
+        href: "http://volcano.net"
+    };
+
+    /* Create fake map, layers and context */
+    var makeContext = function(t) {
+
+        // Map
+        map = new OpenLayers.Map("map");
+        map.metadata = "http://foo/bar?mapmetadata";
+
+        // WMS layer
+        layer = new OpenLayers.Layer.WMS("Name","http://foo/bar",
+                    {
+                        layers:"any",
+                        info_format: "text/plain",
+                        format:"image/nothing"
+                    },
+                    {
+                        removable: true,
+                        abstract: abstract,
+                        isBaseLayer:true,
+                        saveWMC: true,
+                        metadata: {
+                            styles:[{
+                                name:"default",
+                                legend : legend
+                            }],
+                        },
+                        metadataURL: metadataURL
+                    });
+        layer.attribution = attrib;
+        map.addLayer(layer);
+        map.zoomToMaxExtent();
+
+        // TileCache layer
+        layer2 = new OpenLayers.Layer.TileCache("Tiles","http://foo/bar",
+                        "layerName",
+                    {
+                        removable: true,
+                        info_format: "text/plain",
+                        isBaseLayer: true,
+                        context: {
+                                url:"http://server/wms",
+                                name:"layer1,layer2",
+                                abstract: "abasdfadfa asdf ",
+                                info_format: "text/html",
+                                legend: "legefnd",
+                                metadata:"http://server/metadata"
+                        }
+                    });
+        map.addLayer(layer2);
+
+        layer3 = new OpenLayers.Layer.WMS("WMS","http://foo/bar",
+                {layers:"foo"});
+        map.addLayer(layer3);
+
+        // HSLayers.layer.WMS
+        layer4 = new HSLayers.Layer.WMS("HSL.WMS",
+
+                    "http://orig/wms/service",
+                    {
+                        owsService:"WMS",
+                        info_format: "text/html"
+                    },
+                    {
+                        removable: true,
+                        isBaseLayer: true,
+                        url:"http://server/wms",
+                        projection: new OpenLayers.Projection("epsg:4326"),
+                        name:"layer1,layer2",
+                        abstract: "abasdfadfa asdf ",
+                        projections: [new OpenLayers.Projection("epsg:3035"),new OpenLayers.Projection("epsg:4326")],
+                        legend: "legefnd",
+                        metadata:"http://server/metadata"
+                    });
+        map.addLayer(layer4);
+
+        // HSLayers.layer.WMS
+        layer5 = new HSLayers.Layer.WFS("HSL.WFS",
+                    "http://orig/wfs/service",
+                    {
+                        owsService:"WFS",
+                        info_format: "text/html"
+                    },
+                    {
+                        removable: true,
+                        isBaseLayer: true,
+                        url:"http://server/wfs",
+                        name:"layer1,layer2",
+                        abstract: "abasdfadfa asdf ",
+                        legend: "legefnd",
+                        metadata:"http://server/metadata"
+                    });
+        map.addLayer(layer5);
+
+
+
+        // Context
+        var context = {};
+
+        // standard things
+        context.bounds = map.getExtent();
+        context.maxExtent = map.maxExtent;
+        context.projection = map.projection;
+        context.size = map.getSize();                 
+
+        // custom things
+        context.title = "Title";
+        context.abstract = "Abstract";
+        context.keywords = ["key1","key2"];
+        context.logoURL = "/foo/bar.png";
+        context.contactInformation = {};
+        context.contactInformation.contactPersonPrimary = {};
+        context.contactInformation.contactPersonPrimary.contactPerson = "Me";
+        context.contactInformation.contactPersonPrimary.contactOrganization = "They";
+        context.contactInformation.contactPosition = "Here";
+        context.contactInformation.contactAddress = {};
+        context.contactInformation.contactAddress.addressType = "type";
+        context.contactInformation.contactAddress.address = "Street";
+        context.contactInformation.contactAddress.city = "City";
+        context.contactInformation.contactAddress.stateOrProvince = "State";
+        context.contactInformation.contactAddress.postalCode = "12345";
+        context.contactInformation.contactAddress.country = "Czech";
+        context.contactInformation.telephone = "+23400 00";
+        context.contactInformation.email = "foo@bar.org";
+        context.metadata = {};
+        context.metadata.extension = {};
+        context.metadata.extension.timeStamp = HSLayers.Util.getIsoDate(now);
+        context.layers = this.map.layers;
+
+        return context;
+    };
+
+    /**
+     * Write context object to WMC XML and check the result
+     * Hard-coded values are used, we don't get them from a real WMS
+     */
+    function test_01write(t) {
+        if (!t){t = {plan:function(){},eq:function(){},ok:function(){},wait_result: function(){}}}
+        test = t;
+        t.plan(25);
+
+        /* Write the context to WMC XML */
+
+        // WMC reader/writer
+        format = new HSLayers.Format.WMC({includeBaseLayers:true});
+        formatv1 = new HSLayers.Format.WMC.v1_1_0();
+        t.ok(format instanceof HSLayers.Format.WMC,"Format instanceof HSLayers.Format.WMC");
+        var context = makeContext(t);
+       
+        // Write context to xmlResult
+        var fixedContext = format.toContext(context);
+        var xmlResult = format.write(fixedContext);
+
+        
+        /* Tests */
+
+        // Read the XML into XML object
+        var xml = new OpenLayers.Format.XML();
+        var wmc = xml.read(xmlResult);
+
+        // Get Layer element 
+        var layers = xml.getElementsByTagNameNS(wmc,formatv1.namespaces.wmc,"Layer");
+        t.eq(5,layers.length,"Propper number of layers found");
+        var wmcLayer = layers[0];
+        var wmcLayer2 = layers[1];
+        var wmcLayer3 = layers[2];
+        var wmcLayer4 = layers[3];
+        var wmcLayer5 = layers[4];
+
+        console.log(context,wmcLayer);
+
+        t.eq(wmcLayer2.getElementsByTagName("Title")[0].firstChild.nodeValue, layer2.name,"Title of the layer2 saved");
+
+        // Test abstract
+        t.eq(1,wmcLayer.getElementsByTagName("Abstract").length,"abstract is there");
+        console.log(wmcLayer.getElementsByTagName("Abstract").length);
+        t.eq(layer.abstract,wmcLayer.getElementsByTagName("Abstract")[0].firstChild.nodeValue,"abstract fits");
+
+        // Test metadata
+        t.eq(1,wmcLayer.getElementsByTagName("MetadataURL").length,"metadata are there");
+        //t.eq(layer.metadataURL.type,wmcLayer.getElementsByTagName("MetadataURL")[0].getAttribute("type"),"metadata type fits");
+        t.eq(layer.metadataURL.format,wmcLayer.getElementsByTagName("MetadataURL")[0].getAttribute("format"),"metadata format fits");
+        t.eq(layer.metadataURL.href,wmcLayer.getElementsByTagName("MetadataURL")[0].getElementsByTagName("OnlineResource")[0].getAttribute("xlink:href"),"metadata href fits");
+        t.eq(wmcLayer3.getElementsByTagName("MetadataURL").length , 0,"no metadata in the 3rd layer");
+
+        // Various tests
+        t.eq(legend.href,wmcLayer.getElementsByTagName("LegendURL")[0].getElementsByTagName("OnlineResource")[0].getAttribute("xlink:href"),"legend href fits");
+        t.eq(layer.params.INFO_FORMAT,xml.getElementsByTagNameNS(wmcLayer,"http://hsrs.cz/context","info_format")[0].firstChild.nodeValue,"info_format fits");
+        t.eq(HSLayers.Util.getIsoDate(now),xml.getElementsByTagNameNS(wmc,formatv1.namespaces.hsl,"timeStamp")[0].firstChild.nodeValue,"timeStamp fits");
+
+        // Test attribution
+        t.eq(1, xml.getElementsByTagNameNS(wmcLayer,"http://hsrs.cz/context", "attribution").length, "attribution is there");
+        // Attribution title
+        t.eq(layer.attribution.title, xml.getElementsByTagNameNS(wmcLayer,"http://hsrs.cz/context", "title")[0].firstChild.nodeValue, "attribution title matches"); 
+        // Attribution logo
+        var logoNode = xml.getElementsByTagNameNS(wmcLayer,"http://hsrs.cz/context", "logo")[0];
+        t.eq(layer.attribution.logo.width, logoNode.getAttribute("width"), "attribution logo width matches"); 
+        t.eq(layer.attribution.logo.height, logoNode.getAttribute("height"), "attribution logo height matches"); 
+        t.eq(layer.attribution.logo.format, xml.getElementsByTagNameNS(wmcLayer,"http://hsrs.cz/context", "format")[0].firstChild.nodeValue, "attribution logo format matches"); 
+        t.eq(layer.attribution.logo.href, logoNode.getElementsByTagName("OnlineResource")[0].getAttribute("xlink:href"), "attribution logo href matches");
+        // Attribution href
+        // There are two <OnlineResource/> elements: attribution.href & attribution.logo.href, so find the right one
+        var aChildren = xml.getElementsByTagNameNS(wmcLayer,"http://hsrs.cz/context", "attribution")[0].childNodes;
+        for (var i=0; i<aChildren.length; ++i) {
+            if(aChildren[i].nodeName == "OnlineResource") {
+                t.eq(layer.attribution.href,
+                     aChildren[i].getAttribute("xlink:href"),
+                     "attribution href matches");
+            }
+        }
+
+
+        // test HSLayers.Layer.WMS
+        t.eq(layer4.params.OWSURL, wmcLayer4.getElementsByTagName("OnlineResource")[0].getAttribute("xlink:href"),"HSLayers.Layer.WMS url fits");
+        t.ok(xml.getElementsByTagNameNS(wmcLayer4,"http://hsrs.cz/context","owsservice").length,"HSLayers.Layer.WMS is HSLayers.Layer.OWS layer");
+        t.eq(layer4.params.OWSSERVICE,xml.getElementsByTagNameNS(wmcLayer4,"http://hsrs.cz/context","owsservice")[0].firstChild.nodeValue,"HSLayers.Layer.WMS type fits");
+        t.eq(layer4.projections.length,xml.getElementsByTagNameNS(wmcLayer4,"http://hsrs.cz/context","projections")[0].firstChild.nodeValue.split(",").length,"HSLayers.Layer.WMS projections fits");
+        t.eq(layer4.projection.getCode(),xml.getElementsByTagNameNS(wmcLayer4,"http://hsrs.cz/context","projection")[0].firstChild.nodeValue,"HSLayers.Layer.WMS projection fits");
+
+        // test HSLayers.Layer.WFS
+        t.eq(layer5.params.OWSSERVICE,xml.getElementsByTagNameNS(wmcLayer5,"http://hsrs.cz/context","owsservice")[0].firstChild.nodeValue,"HSLayers.Layer.WFS type fits");
+    };
+
+    /**
+     * Write context object to WMC XML, 
+     * read it into a newly created layer 
+     * and check the result against the original values
+     */
+    function test_02read(t) {
+        if (!t){t = {plan:function(){},eq:function(){},ok:function(){},wait_result: function(){}}}
+        t.plan(14);
+
+        var format = new HSLayers.Format.WMC();
+
+        var context = makeContext(t);
+        var fixedContext = format.toContext(context);
+        var xmlResult = format.write(fixedContext);
+
+        var layer = format.getLayersFromContext(format.read(xmlResult).layersContext)[0];
+        
+
+        t.eq(metadataURL.href,layer.metadataURL.href, "metadata href matches");
+        t.eq(metadataURL.format,layer.metadataURL.format, "metadata format matches");
+        t.eq(legend.href,layer.metadata.styles[0].legend.href, "legend matches");
+        t.eq(abstract,layer.metadata.abstract, "abstract matches");
+        t.eq("text/plain",layer.params.INFO_FORMAT, "info format matches");
+        t.eq(attrib.title,layer.attribution.title, "attribution matches");
+
+
+        // testing layer HSLayers.Layer.WMS
+
+        layer = format.getLayersFromContext(format.read(xmlResult).layersContext)[3];
+        t.eq("HSLayers.Layer.WMS",layer.CLASS_NAME, "Propper layer type initialized");
+        t.ok(layer4.params.OWSSERVICE, "OWSSERVICE available");
+        t.eq(layer4.params.OWSSERVICE,layer.params.OWSSERVICE, "OWSSERVICE match");
+        t.ok(layer4.params.OWSURL, "OWSURL available");
+        t.eq(layer4.params.OWSURL,layer.params.OWSURL, "OWSURL matches");
+        t.eq(layer4.url,layer.url, "url fits");
+        t.ok(layer4.projection.equals(layer.projection), "projection fits");
+        t.eq(layer4.projections.length, layer.projections.length, "projections number fits");
+        t.ok(layer4.projections[0].equals(layer.projections[0]), "projectionsfits");
+        
+    };
+
+  </script>
+</head>
+<body>
+    <div id="map" style="width:500px; height: 500px; display: none"></div>
+</body>
+</html>

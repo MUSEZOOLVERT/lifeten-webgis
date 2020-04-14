@@ -1,0 +1,344 @@
+<OGRWFSDataSource>
+  <URL>http://bnhelp.cz/ows/crwfs?</URL>
+  <WFS_Capabilities version="1.0.0" updateSequence="0" xmlns="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.0.0/WFS-capabilities.xsd">
+    <!-- MapServer version 5.0.3 OUTPUT=GIF OUTPUT=PNG OUTPUT=JPEG OUTPUT=WBMP OUTPUT=SVG SUPPORTS=PROJ SUPPORTS=AGG SUPPORTS=FREETYPE SUPPORTS=WMS_SERVER SUPPORTS=WMS_CLIENT SUPPORTS=WFS_SERVER SUPPORTS=WFS_CLIENT SUPPORTS=WCS_SERVER SUPPORTS=FASTCGI SUPPORTS=THREADS SUPPORTS=GEOS INPUT=EPPL7 INPUT=POSTGIS INPUT=OGR INPUT=GDAL INPUT=SHAPEFILE -->
+    <Service>
+      <Name>MapServer WFS</Name>
+      <Title>Help Service Gazeteer</Title>
+      <Abstract>Vyhledavani sidel WFS</Abstract>
+      <OnlineResource>http://www.bnhelp.cz/ows/crwfs?</OnlineResource>
+    </Service>
+    <Capability>
+      <Request>
+        <GetCapabilities>
+          <DCPType>
+            <HTTP>
+              <Get onlineResource="http://www.bnhelp.cz/ows/crwfs?" />
+            </HTTP>
+          </DCPType>
+          <DCPType>
+            <HTTP>
+              <Post onlineResource="http://www.bnhelp.cz/ows/crwfs?" />
+            </HTTP>
+          </DCPType>
+        </GetCapabilities>
+        <DescribeFeatureType>
+          <SchemaDescriptionLanguage>
+            <XMLSCHEMA />
+          </SchemaDescriptionLanguage>
+          <DCPType>
+            <HTTP>
+              <Get onlineResource="http://www.bnhelp.cz/ows/crwfs?" />
+            </HTTP>
+          </DCPType>
+          <DCPType>
+            <HTTP>
+              <Post onlineResource="http://www.bnhelp.cz/ows/crwfs?" />
+            </HTTP>
+          </DCPType>
+        </DescribeFeatureType>
+        <GetFeature>
+          <ResultFormat>
+            <GML2 />
+          </ResultFormat>
+          <DCPType>
+            <HTTP>
+              <Get onlineResource="http://www.bnhelp.cz/ows/crwfs?" />
+            </HTTP>
+          </DCPType>
+          <DCPType>
+            <HTTP>
+              <Post onlineResource="http://www.bnhelp.cz/ows/crwfs?" />
+            </HTTP>
+          </DCPType>
+        </GetFeature>
+      </Request>
+    </Capability>
+    <FeatureTypeList>
+      <Operations>
+        <Query />
+      </Operations>
+      <FeatureType>
+        <Name>nuts1</Name>
+        <Title>NUTS1</Title>
+        <SRS>EPSG:4326</SRS>
+        <LatLongBoundingBox minx="-73.2635" miny="-21.3428" maxx="120.131" maxy="83.6274" />
+        <!-- WARNING: Required Feature Id attribute (fid) not specified for this feature type. Make sure you set one of wfs_featureid, ows_feature_id or gml_featureid metadata. -->
+      </FeatureType>
+      <FeatureType>
+        <Name>states</Name>
+        <Title>states</Title>
+        <SRS>EPSG:4326</SRS>
+        <LatLongBoundingBox minx="-180" miny="-89.9" maxx="180" maxy="83.6747" />
+        <!-- WARNING: Required Feature Id attribute (fid) not specified for this feature type. Make sure you set one of wfs_featureid, ows_feature_id or gml_featureid metadata. -->
+      </FeatureType>
+      <FeatureType>
+        <Name>nuts2</Name>
+        <Title>NUTS2</Title>
+        <SRS>EPSG:4326</SRS>
+        <LatLongBoundingBox minx="-73.2635" miny="-21.3428" maxx="120.131" maxy="83.6274" />
+        <!-- WARNING: Required Feature Id attribute (fid) not specified for this feature type. Make sure you set one of wfs_featureid, ows_feature_id or gml_featureid metadata. -->
+      </FeatureType>
+      <FeatureType>
+        <Name>nuts3</Name>
+        <Title>NUTS2</Title>
+        <SRS>EPSG:4326</SRS>
+        <LatLongBoundingBox minx="-73.2635" miny="-21.3428" maxx="120.131" maxy="83.6274" />
+        <!-- WARNING: Required Feature Id attribute (fid) not specified for this feature type. Make sure you set one of wfs_featureid, ows_feature_id or gml_featureid metadata. -->
+      </FeatureType>
+      <FeatureType>
+        <Name>orp</Name>
+        <Title>Obce s rozsirenou pusobnosti</Title>
+        <SRS>EPSG:4326</SRS>
+        <LatLongBoundingBox minx="12.0972" miny="48.5542" maxx="18.8585" maxy="51.0558" />
+      </FeatureType>
+      <FeatureType>
+        <Name>okresy</Name>
+        <Title>Okresy CR</Title>
+        <SRS>EPSG:4326</SRS>
+        <LatLongBoundingBox minx="12.0972" miny="48.5542" maxx="18.8583" maxy="51.0558" />
+      </FeatureType>
+      <FeatureType>
+        <Name>sidla</Name>
+        <Title>Sidla CR</Title>
+        <SRS>EPSG:4326</SRS>
+        <LatLongBoundingBox minx="12.0696" miny="48.5297" maxx="18.9733" maxy="51.0388" />
+      </FeatureType>
+      <FeatureType>
+        <Name>kraje</Name>
+        <Title>Kraje CR</Title>
+        <SRS>EPSG:4326</SRS>
+        <LatLongBoundingBox minx="12.0977" miny="48.5542" maxx="18.8505" maxy="51.0552" />
+      </FeatureType>
+      <FeatureType>
+        <Name>usrgaz</Name>
+        <Title>User objects</Title>
+        <SRS>EPSG:4326</SRS>
+        <!-- WARNING: Mandatory LatLongBoundingBox could not be established for this layer.  Consider setting LAYER.EXTENT or wfs_extent metadata. -->
+        <!-- WARNING: Required Feature Id attribute (fid) not specified for this feature type. Make sure you set one of wfs_featureid, ows_feature_id or gml_featureid metadata. -->
+      </FeatureType>
+    </FeatureTypeList>
+    <ogc:Filter_Capabilities>
+      <ogc:Spatial_Capabilities>
+        <ogc:Spatial_Operators>
+          <ogc:Equals />
+          <ogc:Disjoint />
+          <ogc:Touches />
+          <ogc:Within />
+          <ogc:Overlaps />
+          <ogc:Crosses />
+          <ogc:Intersect />
+          <ogc:Contains />
+          <ogc:DWithin />
+          <ogc:BBOX />
+        </ogc:Spatial_Operators>
+      </ogc:Spatial_Capabilities>
+      <ogc:Scalar_Capabilities>
+        <ogc:Logical_Operators />
+        <ogc:Comparison_Operators>
+          <ogc:Simple_Comparisons />
+          <ogc:Like />
+          <ogc:Between />
+        </ogc:Comparison_Operators>
+      </ogc:Scalar_Capabilities>
+    </ogc:Filter_Capabilities>
+  </WFS_Capabilities>
+  <OGRWFSLayer name="okresy">
+    <schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="0.1">
+      <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+      <element name="okresy" type="ms:okresyType" substitutionGroup="gml:_Feature" />
+      <complexType name="okresyType">
+        <complexContent>
+          <extension base="gml:AbstractFeatureType">
+            <sequence>
+              <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1" />
+              <element name="KODOK" type="string" />
+              <element name="NAZOK" type="string" />
+            </sequence>
+          </extension>
+        </complexContent>
+      </complexType>
+    </schema>
+  </OGRWFSLayer>
+  <OGRWFSLayer name="nuts1">
+    <schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="0.1">
+      <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+      <element name="nuts1" type="ms:nuts1Type" substitutionGroup="gml:_Feature" />
+      <complexType name="nuts1Type">
+        <complexContent>
+          <extension base="gml:AbstractFeatureType">
+            <sequence>
+              <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1" />
+              <element name="ARRGCDL0" type="string" />
+              <element name="COUNT" type="string" />
+              <element name="CNTRY_NAME" type="string" />
+            </sequence>
+          </extension>
+        </complexContent>
+      </complexType>
+    </schema>
+  </OGRWFSLayer>
+  <OGRWFSLayer name="nuts2">
+    <schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="0.1">
+      <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+      <element name="nuts2" type="ms:nuts2Type" substitutionGroup="gml:_Feature" />
+      <complexType name="nuts2Type">
+        <complexContent>
+          <extension base="gml:AbstractFeatureType">
+            <sequence>
+              <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1" />
+              <element name="AREA" type="string" />
+              <element name="PERIMETER" type="string" />
+              <element name="NUEC1MV6_" type="string" />
+              <element name="NUEC1MV6_I" type="string" />
+              <element name="NURGCD" type="string" />
+              <element name="NURGCDL0" type="string" />
+              <element name="NURGCDL1" type="string" />
+              <element name="NURGCDL2" type="string" />
+              <element name="ARRGCDL0" type="string" />
+              <element name="Rowid_" type="string" />
+              <element name="NURGCD_1" type="string" />
+              <element name="NURGNM" type="string" />
+              <element name="NURGCDL0_1" type="string" />
+              <element name="NURGCDL1_1" type="string" />
+              <element name="NURGCDL2_1" type="string" />
+              <element name="Rowid1" type="string" />
+              <element name="NURGCD_12" type="string" />
+              <element name="IGELCD" type="string" />
+              <element name="Rowid_1" type="string" />
+              <element name="IGELCD_1" type="string" />
+              <element name="IGELCDDS" type="string" />
+            </sequence>
+          </extension>
+        </complexContent>
+      </complexType>
+    </schema>
+  </OGRWFSLayer>
+  <OGRWFSLayer name="orp">
+    <schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="0.1">
+      <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+      <element name="orp" type="ms:orpType" substitutionGroup="gml:_Feature" />
+      <complexType name="orpType">
+        <complexContent>
+          <extension base="gml:AbstractFeatureType">
+            <sequence>
+              <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1" />
+              <element name="CISORP" type="string" />
+              <element name="NAZOB" type="string" />
+            </sequence>
+          </extension>
+        </complexContent>
+      </complexType>
+    </schema>
+  </OGRWFSLayer>
+  <OGRWFSLayer name="kraje">
+    <schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="0.1">
+      <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+      <element name="kraje" type="ms:krajeType" substitutionGroup="gml:_Feature" />
+      <complexType name="krajeType">
+        <complexContent>
+          <extension base="gml:AbstractFeatureType">
+            <sequence>
+              <element name="msGeometry" type="gml:MultiPolygonPropertyType" minOccurs="0" maxOccurs="1" />
+              <element name="KRAJ_KOD" type="string" />
+              <element name="KRAJ_NAZEV" type="string" />
+            </sequence>
+          </extension>
+        </complexContent>
+      </complexType>
+    </schema>
+  </OGRWFSLayer>
+  <OGRWFSLayer name="states">
+    <schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="0.1">
+      <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+      <element name="states" type="ms:statesType" substitutionGroup="gml:_Feature" />
+      <complexType name="statesType">
+        <complexContent>
+          <extension base="gml:AbstractFeatureType">
+            <sequence>
+              <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1" />
+              <element name="NAME" type="string" />
+              <element name="CAPITAL" type="string" />
+              <element name="APPROX" type="string" />
+              <element name="AREA" type="string" />
+              <element name="SOURCETHM" type="string" />
+            </sequence>
+          </extension>
+        </complexContent>
+      </complexType>
+    </schema>
+  </OGRWFSLayer>
+  <OGRWFSLayer name="nuts3">
+    <schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="0.1">
+      <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+      <element name="nuts3" type="ms:nuts3Type" substitutionGroup="gml:_Feature" />
+      <complexType name="nuts3Type">
+        <complexContent>
+          <extension base="gml:AbstractFeatureType">
+            <sequence>
+              <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1" />
+              <element name="AREA" type="string" />
+              <element name="PERIMETER" type="string" />
+              <element name="NUEC1MV7_" type="string" />
+              <element name="NUEC1MV7_I" type="string" />
+              <element name="NURGCD" type="string" />
+              <element name="NURGCDL0" type="string" />
+              <element name="NURGCDL1" type="string" />
+              <element name="NURGCDL2" type="string" />
+              <element name="ARRGCDL0" type="string" />
+              <element name="NURGLBLV" type="string" />
+              <element name="NUFTTP" type="string" />
+              <element name="Rowid_" type="string" />
+              <element name="NURGCD_1" type="string" />
+              <element name="NURGNM" type="string" />
+              <element name="NURGCDL0_1" type="string" />
+              <element name="NURGCDL1_1" type="string" />
+              <element name="NURGCDL2_1" type="string" />
+              <element name="Rowid1" type="string" />
+              <element name="NURGCD_12" type="string" />
+              <element name="IGSACD" type="string" />
+              <element name="IGELCD" type="string" />
+              <element name="Rowid_1" type="string" />
+              <element name="IGELCD_1" type="string" />
+              <element name="IGELCDDS" type="string" />
+            </sequence>
+          </extension>
+        </complexContent>
+      </complexType>
+    </schema>
+  </OGRWFSLayer>
+  <OGRWFSLayer name="sidla">
+    <schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="0.1">
+      <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+      <element name="sidla" type="ms:sidlaType" substitutionGroup="gml:_Feature" />
+      <complexType name="sidlaType">
+        <complexContent>
+          <extension base="gml:AbstractFeatureType">
+            <sequence>
+              <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1" />
+              <element name="CISLO" type="string" />
+              <element name="NAZEV" type="string" />
+              <element name="TYP" type="string" />
+              <element name="NAZEV_UNI" type="string" />
+              <element name="Y_JTS" type="string" />
+              <element name="X_JTS" type="string" />
+              <element name="Y" type="string" />
+              <element name="X" type="string" />
+              <element name="KN" type="string" />
+              <element name="NAZKR" type="string" />
+              <element name="KODOK" type="string" />
+              <element name="NAZOK" type="string" />
+              <element name="ICOB" type="string" />
+              <element name="NAZOB" type="string" />
+              <element name="KODORP" type="string" />
+              <element name="NAZORP" type="string" />
+              <element name="OKPO" type="string" />
+              <element name="KODPO" type="string" />
+              <element name="NAZEV_HLED" type="string" />
+            </sequence>
+          </extension>
+        </complexContent>
+      </complexType>
+    </schema>
+  </OGRWFSLayer>
+</OGRWFSDataSource>

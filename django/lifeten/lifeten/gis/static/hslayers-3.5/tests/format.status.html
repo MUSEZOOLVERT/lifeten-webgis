@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="../build/OpenLayers-debug.js"></script>
+  <script type="text/javascript" src="../source/HSLayers.js"></script>
+  <script type="text/javascript" src="../source/HSLayers/Format/State.js"></script>
+  <script type="text/javascript" src="../source/HSLayers/Layer/WarpedWMS.js"></script>
+  <script type="text/javascript" src="../source/HSLayers/Layer/MapServer.js"></script>
+
+  <title>Testing HSLayers.Format.State</title>
+  <script type="text/javascript">
+
+    /** Test HSLayers.Format.State
+     * 
+     * - Create map with various layers and settings
+     * - Write the state of the map into a JSON using HSL.Format.State
+     * - Read the state from the JSON into a new map
+     * - Compare the old and the new map 
+     */
+    function test_state(t) {
+
+        // Map attributes to test
+        var mapAttributes = ["scale","projection","center","title"]; 
+
+        // Layer attributes to test
+        var layerAttributes = [ "name","group", "displayInLayerSwitcher", "visibility", "attribution", "index",
+                               "transitionEffect", "url",
+                               "params","isBaseGroup", "isBaseLayer",
+                               "minResolution","maxResolution", "minScale", "maxScale", "metadata", "abstract",
+                               "maxExtent", "opacity","singleTile", "removable", "info_format",
+                               "queryable","legend", "projections","wmsMinScale","wmsMaxScale"];
+
+        // Plan the tests
+        var numberOfLayers = 1;
+        var numberOfProjections = 2;
+        var numberOfTests = 4 + 4 + 1 + (numberOfLayers * (layerAttributes.length + 3)) -1 + numberOfProjections 
+            + 4 + (numberOfLayers * (layerAttributes.length + 3)) + numberOfProjections;
+        t.plan(numberOfTests);
+
+        /* Create map with various layers and settings */
+
+        var map1 = new OpenLayers.Map("map1",{ // map1 is ID of the div
+                projection: new OpenLayers.Projection("epsg:4326"), // we
+                        // assume in HSL, projection is always instanace of
+                        // OpenLayers.Projection. Sometimes, in pure-OpenLayers
+                        // applications, it can be string as well
+                maxExtent: new OpenLayers.Bounds(-180,-90,90,180)
+                // and so on
+                });
+        
+
+        // at least one base layer has to be defined
+        var layer1 = new OpenLayers.Layer.WMS("Layer1","http://foo/bar/wms",
+                {
+                    layers: "foo",
+                    version: "1.3.0"
+                },
+                {
+                    group: "Group",
+                    displayInLayerSwitcher: true,
+                    visibility: true,
+                    attribution: {logo:
+                        {href:"http://foo/bar/logo",width:100,height:100}, 
+                        href:"http://foo/bar/attribution",
+                        title: "Attribution title"},
+                    transitionEffect: "resize",
+                    metadata: {
+                        format: "application/xml",
+                        type: "ISO/TC211",
+                        href: "http://foo/bar/metadata"
+                    },
+                    abstract:"Long long abstract",
+                    opacity: 0.7,
+                    singleTile: true,
+                    removable: true,
+                    info_format: "text/plain",
+                    legend: "http://foo/bar/legend",
+                    wmsMinScale: 1000,
+                    wmsMaxScale: 10000,
+                    projections: [
+                        new OpenLayers.Projection("epsg:4326"),
+                        new OpenLayers.Projection("epsg:3035")
+                    ],
+                    maxExtent: new OpenLayers.Bounds(-905000, -1230000, -400000, -900000)
+                });
+                        
+        layer1.maxExtent.centerLonLat = new OpenLayers.LonLat(-652500, -1065000);
+
+        map1.addLayer(layer1);
+        map1.zoomToMaxExtent();
+
+        /* Write the state of the map into a JSON using HSL.Format.State */
+
+        var format = new HSLayers.Format.State();
+
+        var json = format.map2json(map1, true);        // var json = format.toContext(map); 
+        var pretty = true;
+        var text = format.map2string(map1, pretty, true);        // var text = format.write(map,pretty); 
+
+        var testFormat = new OpenLayers.Format.JSON(); 
+
+        t.eq(typeof(text), "string", "Text type should be string");
+        t.eq(testFormat.write(json,pretty),text, "JSON.write() should return the same result");
+    	t.eq(format.json2layers(json.layers).length, map1.layers.length, "Number of layers for json2layers()"); // t.eq(format.getLayersFromContext(json.layers).length; map1.layers.length); 
+    	t.eq(format.layers2json(map1.layers, true).length, map1.layers.length, "Number of layers for layers2json()"); // t.eq(format.getContextForLayers(map1.layers).length; map1.layers.length); 
+
+        // we can start testing here
+
+        /* test the map in the json */
+        t.eq(json.title, map1.title, "Map title");
+        t.eq(json.scale, map1.getScale(), "Map scale");
+        t.eq(json.projection, map1.projection.getCode().toLowerCase(), "Map projection");
+        t.ok(json.center[0] == map1.getCenter().lon &&
+             json.center[1] == map1.getCenter().lat, "Map center");
+
+        /* test layers */
+        t.eq(json.layers.length, map1.layers.length, "Number of layers for json & map1");
+
+        for (var i = 0, len=json.layers.length; i < len; i++) {
+            var context = json.layers[i];
+            var layer = map1.layers[i];
+
+            for (var k = 0, klen = layerAttributes.length; k<klen; k++) {
+                switch (layerAttributes[k]) {
+                    case "index":
+                        // we don't test it as we don't save it
+                        // t.eq(context.index, map1.getLayerIndex(layer), "Json layer " + i + " attribute " + k + " index"); 
+                        break;
+                    case "projections":
+                        t.eq(context.projections.length, layer.projections.length, "Json layer " + i + " attribute " + k + " (number of) projections");
+                        for (var j = 0, plen = context.projections.length; j < plen; j++) {
+                            t.eq(context.projections[j], layer.projections[j].getCode().toLowerCase(), "Json layer " + i + " " + j +". projection");
+                        }
+                        break;
+                    case "maxExtent":
+                        t.eq(context.maxExtent.left, layer.maxExtent.left, "Json layer " + i + " attribute " + k + " maxExtent left");
+                        t.eq(context.maxExtent.bottom, layer.maxExtent.bottom, "Json layer " + i + " attribute " + k + " maxExtent bottom");
+                        t.eq(context.maxExtent.right, layer.maxExtent.right, "Json layer " + i + " attribute " + k + " maxExtent right");
+                        t.eq(context.maxExtent.top, layer.maxExtent.top, "Json layer " + i + " attribute " + k + " maxExtent top");
+                        break;
+                    default:
+                        t.eq(context[layerAttributes[k]], layer[layerAttributes[k]], "Json layer " + i + " attribute " + k + " " + layerAttributes[k]);
+                        break;
+                }
+            }
+        }
+
+        /* Read the state from the JSON into a new map */
+
+        // we initialize the same map
+        var map2 = new OpenLayers.Map("map2",{
+                projection: new OpenLayers.Projection("epsg:4326"),
+                maxExtent: new OpenLayers.Bounds(-180,-90,90,180)
+            });
+
+        // parse
+        var context = format.string2json(text); // var context = format.read(text); // m2j: this is asymetric: write() takes a map, read() returns a JSON object
+        var layers = format.json2layers(context.layers); // var layers = format.getLayersFromContext(context.layers);
+
+        // set map attributes
+        map2.title = context.title;
+        map2.addLayers(layers); 
+        var centerLonLat = new OpenLayers.LonLat(context.center[0], context.center[1]);
+        map2.setCenter(centerLonLat);
+        map2.zoomToScale(context.scale);
+
+        /* Compare the old and the new map */
+        t.eq(map1.layers.length, map2.layers.length, "number of layers of map2 is: " + map2.layers.length);
+        t.eq(map1.title, map2.title, "map2 title is: " + map2.title);
+        t.eq(map1.getScale(), map2.getScale(), "map2 scale is: " + map2.getScale());
+        t.ok(map1.getCenter().equals(map2.getCenter()), "map2 center is: " + map2.getCenter());
+
+        /* compare the  layers from map2 and map1 */
+        for (var l = 0, llen=map1.layers.length; l < llen; l++) {
+            var layer1 = map1.layers[l];
+            var layer2 = map2.layers[l];
+
+            for (var m = 0, mlen = layerAttributes.length; m < mlen; m++) {
+                switch (layerAttributes[m]) {
+                    case "index": 
+                        t.eq(map1.getLayerIndex(layer1), map2.getLayerIndex(layer2), "Map2 layer " + l + " attribute " + m + " index is: " + map2.getLayerIndex(layer2));
+                        break;
+                    case "projections":
+                        t.eq(layer1.projections.length, layer2.projections.length, "Map2 layer " + l + " attribute " + m + " (number of) projections: " + layer2.projections.length);
+                        for (var n = 0, nlen = layer1.projections.length; n < nlen; n++) {
+                            t.ok(layer1.projections[n].equals(layer2.projections[n]), "Map2 layer " + l + " " + n +". projection: " + layer2.projections[n]);
+                        }
+                        break;
+                    case "maxExtent":
+                        t.eq(layer1.maxExtent.left, layer2.maxExtent.left, "Map2 layer " + l + " attribute " + m + " maxExtent left: " + layer2.maxExtent.left);
+                        t.eq(layer1.maxExtent.bottom, layer2.maxExtent.bottom, "Map2 layer " + l + " attribute " + m + " maxExtent bottom: " + layer2.maxExtent.bottom);
+                        t.eq(layer1.maxExtent.right, layer2.maxExtent.right, "Map2 layer " + l + " attribute " + m + " maxExtent right: " + layer2.maxExtent.right);
+                        t.eq(layer1.maxExtent.top, layer2.maxExtent.top, "Map2 layer " + l + " attribute " + m + " maxExtent top: " + layer2.maxExtent.top);
+                        break;
+                    default:
+                        t.eq(layer1[layerAttributes[m]], layer2[layerAttributes[m]], "Map2 layer " + l + " attribute " + m + " " + layerAttributes[m] + " is: " + layer2[layerAttributes[m]]);
+                        break;
+                }
+            }
+        }
+
+    };        
+
+  </script>
+</head>
+<body>
+    <div id="map1" style="width:500px; height: 500px; display: none"></div>
+    <div id="map2" style="width:500px; height: 500px; display: none"></div>
+    <div id="target"></div>
+</body>
+</html>

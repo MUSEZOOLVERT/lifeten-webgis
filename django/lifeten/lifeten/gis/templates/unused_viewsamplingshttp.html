@@ -1,0 +1,36 @@
+{% extends "view.html" %}
+{% block head %}
+    <script type="text/javascript" src="{{ STATIC_URL }}tablesorter/jquery.tablesorter.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}tablesorter/themes/blue/style.css" />
+    <script type="text/javascript">
+    $(function() {
+      $("#hor-zebra").tablesorter();
+    })
+    </script>
+{% endblock %}
+
+{% block tablehead %}
+<thead>
+    <tr  id="hor-zebra">
+        <th>Specie</th>
+        <th>Dataset</th>
+        <th>Date</th>
+        <th>Incertezza in metri</th>
+        <th>Conteggio individuale</th>
+        <th>Programma monitoraggio</th>
+        <th>Sesso</th>
+        <th>Rilevatori</th>
+        <th>Stato di vita</th>
+    </tr>
+</thead>
+{% endblock%}
+
+{% block tablecontent %}
+
+    {% autoescape off %}
+    {{ html }}
+    {% endautoescape %}
+    
+{% endblock %}
+
+<!-- <td colspan="2"><a href="/exportSamplings/" class="button">Export data in CSV format</a></td></tr> -->

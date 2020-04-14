@@ -1,0 +1,20 @@
+{% extends "gis/kml/base.kml" %}
+{% block placemarks %}
+  {% for place in places %}
+    <Placemark>
+      <species>{% if place.specie %}{{ place.specie }}{% else %}{{ specie }}{% endif %}</species>
+      <datasetrowid>{% if place.datasetrowid %}{{ place.datasetrowid }}{% else %}{{ datasetrowid }}{% endif %}</datasetrowid>
+      <basisofrecord>{% if place.basisofrecord %}{{ place.basisofrecord }}{% else %}{{ basisofrecord }}{% endif %}</basisofrecord>
+      <date>{% if place.eventdate %}{{ place.eventdate }}{% else %}{{ eventdate }}{% endif %}</date>
+      <coordinateuncertainty>{% if place.coordinateuncertaintyinmeters %}{{ place.coordinateuncertaintyinmeters }}{% else %}{{ coordinateuncertaintyinmeters }}{% endif %}</coordinateuncertainty>
+      <count>{% if place.individualcount %}{{ place.individualcount }}{% else %}{{ individualcount }}{% endif %}</count>
+      <program>{% if place.monitoringprogramme %}{{ place.monitoringprogramme }}{% else %}{{ monitoringprogramme }}{% endif %}</program>
+      <sex>{% if place.sex %}{{ place.sex }}{% else %}{{ sex }}{% endif %}</sex>
+      <recorder_1>{% if place.recorder_1 %}{{ place.recorder_1 }}{% else %}{{ recorder_1 }}{% endif %}</recorder_1>
+      <recorder_2>{% if place.recorder_2 %}{{ place.recorder_2 }}{% else %}{{ recorder_2 }}{% endif %}</recorder_2>
+      <recorder_3>{% if place.recorder_3 %}{{ place.recorder_3 }}{% else %}{{ recorder_3 }}{% endif %}</recorder_3>
+      <recorder_4>{% if place.recorder_4 %}{{ place.recorder_4 }}{% else %}{{ recorder_4 }}{% endif %}</recorder_4>
+      {{ place.kml|safe }}
+    </Placemark>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../build/OpenLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers.js"></script>
+    <script type="text/javascript" src="../source/HSLayers/Control/BoxLayerSwitcher.js"></script>
+
+    <title>Testing HSLayers.Control.BoxLayerSwitcher</title>
+    <script type="text/javascript">
+
+    var map;
+    var kmlPanel;
+    var test;
+    function test01_ls(t) {
+
+            t.plan(2);
+
+            // create map
+            map = new OpenLayers.Map("map");
+            map.addLayer(new OpenLayers.Layer.WMS("MetaCarta WMS",
+                       "http://labs.metacarta.com/wms/vmap0",
+                       {layers: 'basic'},
+                       {isBaseLayer:"true",visibility:true}
+                   ));
+
+            map.addLayer(new OpenLayers.Layer.WMS("OpenStreetMap",
+                       "http://osm.ccss.cz/cgi-bin/ows/wms/europe",
+                       {layers: 'default',format:"aggpng24"},
+                       {metadataURL: "http://wiki.openstreetmap.org",
+                        legendURL: "http://wiki.openstreetmap.org/images/8/82/Rendering-highway_primary_link.png",
+                        visibility: false,
+                        isBaseLayer: true,
+                        isBaseGroup: false }
+                   ));
+
+            map.addLayer(new OpenLayers.Layer.WMS("WMS",
+                        "http://bnhelp.cz/ows/",
+                        {layers:"doprava"}));
+
+            map.zoomToMaxExtent();
+
+            var ls = new HSLayers.Control.BoxLayerSwitcher();
+            map.addControl(ls);
+
+            t.ok(ls instanceof HSLayers.Control.BoxLayerSwitcher);
+
+            //      title, top layer(s), cover layer(s), parameters
+            ls.add("Base",this.map.layers[0],[],{active: true});
+
+            t.ok(ls.groups["Base"]);
+
+            //ls.add("OSM",this.map.layers[1],[],{});
+            //ls.add("Labels",[],[this.map.layers[2]],{active:true});
+        };
+
+  </script>
+</head>
+<body>
+    <div id="map" style="width:500px; height: 500px; display: none"></div>
+</body>
+</html>

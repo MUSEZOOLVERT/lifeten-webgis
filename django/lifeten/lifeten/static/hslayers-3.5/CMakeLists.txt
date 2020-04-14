@@ -1,0 +1,43 @@
+# FIXME: nedetekovat kompilator, nepotrebujeme
+project(HSLayers C)
+SET(HSLAYERS_VERSION "2.0.0")
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4.0 FATAL_ERROR)
+IF(COMMAND cmake_policy)
+	cmake_policy(SET CMP0003 NEW)
+ENDIF(COMMAND cmake_policy)
+SET(CMAKE_COLOR_MAKEFILE ON)
+
+OPTION(WITH_Geoportal "Enable geoportal integration. External feature don't use locally" FALSE)
+MARK_AS_ADVANCED(WITH_Geoportal)
+MARK_AS_ADVANCED(CMAKE_BUILD_TYPE)
+MARK_AS_ADVANCED(CMAKE_INSTALL_PREFIX)
+MARK_AS_ADVANCED(EXECUTABLE_OUTPUT_PATH)
+MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH)
+MARK_AS_ADVANCED(CMAKE_BACKWARDS_COMPATIBILITY)
+
+SET(HSLAYERS_WEBSERVER_PREFIX "/hslayers/${HSLAYERS_VERSION}/" CACHE PATH
+		"Relative path specifying path on webserver (used for includes in js and php files.)")
+IF(WITH_Geoportal)
+	SET(HSLAYERS_INSTALL_PREFIX "${GEOPORTAL_INSTALL_PREFIX}/${HSLAYERS_WEBSERVER_PREFIX}/" CACHE PATH "Install path prefix")
+ELSE(WITH_Geoportal)
+	SET(WWWLIBS_INSTALL_PREFIX "/var/www/wwwlibs/" CACHE PATH "WWWLIBS Install prefix")
+	SET(HSLAYERS_INSTALL_PREFIX "${WWWLIBS_INSTALL_PREFIX}/${HSLAYERS_WEBSERVER_PREFIX}/" CACHE PATH "Install path prefix")
+ENDIF(WITH_Geoportal)
+MARK_AS_ADVANCED(HSLAYERS_INSTALL_PREFIX)
+SET(HSLAYERS_THEME_DIR "${HSLAYERS_INSTALL_PREFIX}/theme/")
+SET(HSLAYERS_IMG_PREFIX "${HSLAYERS_INSTALL_PREFIX}/img/" CACHE PATH "Images install path")
+
+# TODO: Pridat checky na zavyslosti
+# Pridejte seznam deps ktere by se meli kontrolovat.
+
+add_custom_command(
+	OUTPUT HSLayers.js
+	COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/tools/build.py -rpcai
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/tools/build.py
+)
+add_custom_target(hslayers ALL DEPENDS HSLayers.js)
+INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/"
+	DESTINATION ${HSLAYERS_INSTALL_PREFIX}
+	PATTERN ".svn" EXCLUDE)

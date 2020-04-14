@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block head %}
+  <script type="text/javascript">
+      
+      <!-- Log dell''accesso utente -->
+      $(function() { $( "input.log" ).button(); });
+
+      <!-- Rimozione degli elementi di login inseriti nel footer -->
+      $(function() { $("#login_base_buttons").remove(); } );  
+  </script>
+{% endblock %}
+{% block content %}
+  {% if form.errors %}
+  <p>Il vostro nome utente e password non corrispondono. Si prega di riprovare.</p>
+  {% endif %}
+
+  <p align="justify">L'accesso come visitatore è disponibile usando l'utente <i>ospite</i> e la password <i>lifeten</i> <br />
+  <b>Si avvisa che alcuni dati potrebbero essere visualizzati con una precisione o risoluzione spaziale modificata, al fine di tutelare la sensibilità di specie chiave</b></p>
+  <form method="post" action="/login/">
+  {% csrf_token %}
+  <table>
+  <tr>
+      <td>{{ form.username.label_tag }}</td>
+      <td>{{ form.username }}</td>
+  </tr>
+  <tr>
+      <td>{{ form.password.label_tag }}</td>
+      <td>{{ form.password }}</td>
+  </tr>
+  </table>
+
+  <input type="submit" value="Login" class="log"/>
+  <input type="hidden" name="next" value="/" />
+  </form>
+{% endblock %}
